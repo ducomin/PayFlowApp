@@ -1,15 +1,59 @@
+target/
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+### STS ###
+.apt_generated*
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+### IntelliJ IDEA ###
+.idea/
+.idea
+*.iws
 *.iml
-.gradle
-/local.properties
-/.idea/caches
-/.idea/libraries
-/.idea/modules.xml
-/.idea/workspace.xml
-/.idea/navEditor.xml
-/.idea/assetWizardSettings.xml
-.DS_Store
-/build
-/captures
-.externalNativeBuild
-.cxx
+*.ipr
+*.class
+.gradle/
+out/
+*.log
+*.tmp
 local.properties
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+META-INF/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+### VS Code ###
+.vscode/
+.github
+.docs
+.config
+
+### Environment Variables ###
+.env
+.envrc
+
+### Logs ###
+
+/logs/audit.log
+/logs/srvcanal.log
+/logs/*
+/gherkin-results/
+/.allure/
+/*Results.xml
+/*Result.xml
+/*Results.json
+/*Result.json
