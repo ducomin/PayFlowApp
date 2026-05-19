@@ -6,7 +6,7 @@ import androidx.lifecycle.viewModelScope
 import br.com.payflowapplication.model.Assinatura
 import br.com.payflowapplication.model.CategoriaAssinatura
 import br.com.payflowapplication.model.Modalidade
-import br.com.payflowapplication.repository.AssinaturaRepository
+import br.com.payflowapplication.data.repository.AssinaturaRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

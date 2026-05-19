@@ -1,10 +1,8 @@
 package br.com.payflowapplication.view.screens
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -12,17 +10,19 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import br.com.payflowapplication.model.CategoriaAssinatura
-import br.com.payflowapplication.model.Modalidade
 import br.com.payflowapplication.ui.theme.*
+import br.com.payflowapplication.view.components.CategoriaChipsGroup
+import br.com.payflowapplication.view.components.ErrorSupportText
+import br.com.payflowapplication.view.components.FieldLabel
+import br.com.payflowapplication.view.components.FilledTextField
+import br.com.payflowapplication.view.components.ModalidadeSegmentedButton
+import br.com.payflowapplication.view.components.StepIndicator
 import br.com.payflowapplication.viewmodels.CadastroAssinaturaViewModel
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -245,195 +245,6 @@ fun CadastroAssinaturaScreen(
     }
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// Component: Step Indicator (3 bars, filled = primary, empty = surfaceVariant)
-// ─────────────────────────────────────────────────────────────────────────────
-@Composable
-private fun StepIndicator(currentStep: Int, totalSteps: Int) {
-    Column {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(4.dp)
-        ) {
-            repeat(totalSteps) { index ->
-                val filled = index < currentStep
-                Box(
-                    modifier = Modifier
-                        .weight(1f)
-                        .height(4.dp)
-                        .clip(CircleShape)
-                        .background(if (filled) Primary else SurfaceVariant)
-                )
-            }
-        }
-        Spacer(Modifier.height(6.dp))
-        Text(
-            text = "Passo $currentStep de $totalSteps",
-            style = MaterialTheme.typography.labelSmall,
-            color = OnSurfaceVariant
-        )
-    }
-}
-
-// ─────────────────────────────────────────────────────────────────────────────
-// Component: M3 Filled TextField with floating label and error support
-// ─────────────────────────────────────────────────────────────────────────────
-@Composable
-private fun FilledTextField(
-    label: String,
-    value: String,
-    onValueChange: (String) -> Unit,
-    placeholder: String = "",
-    prefix: String? = null,
-    errorMessage: String? = null,
-    keyboardOptions: KeyboardOptions = KeyboardOptions.Default
-) {
-    val isError = errorMessage != null
-    Column(modifier = Modifier.fillMaxWidth()) {
-        // Label above the field (matches mockup: label in primary color on top)
-        Text(
-            text = label,
-            style = MaterialTheme.typography.labelSmall,
-            fontWeight = FontWeight.Medium,
-            color = if (isError) Error else Primary,
-            modifier = Modifier.padding(start = 16.dp, bottom = 4.dp)
-        )
-        TextField(
-            value = value,
-            onValueChange = onValueChange,
-            placeholder = {
-                Text(
-                    text = placeholder,
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = OnSurfaceVariant
-                )
-            },
-            prefix = if (prefix != null) {
-                { Text(prefix, color = OnSurfaceVariant, style = MaterialTheme.typography.bodyLarge) }
-            } else null,
-            isError = isError,
-            singleLine = true,
-            keyboardOptions = keyboardOptions,
-            colors = TextFieldDefaults.colors(
-                focusedContainerColor = SurfaceContainerHighest,
-                unfocusedContainerColor = SurfaceContainerHighest,
-                errorContainerColor = SurfaceContainerHighest,
-                focusedTextColor = OnSurface,
-                unfocusedTextColor = OnSurface,
-                focusedIndicatorColor = Primary,
-                unfocusedIndicatorColor = Outline,
-                errorIndicatorColor = Error,
-                cursorColor = Primary,
-                errorCursorColor = Error,
-                focusedLabelColor = Primary,
-                unfocusedLabelColor = OnSurfaceVariant,
-                errorLabelColor = Error
-            ),
-            shape = RoundedCornerShape(topStart = 4.dp, topEnd = 4.dp),
-            modifier = Modifier.fillMaxWidth()
-        )
-        if (isError) {
-            ErrorSupportText(errorMessage!!)
-        }
-        Spacer(Modifier.height(if (isError) 4.dp else 16.dp))
-    }
-}
-
-// ─────────────────────────────────────────────────────────────────────────────
-// Component: M3 SegmentedButton — Mensal / Anual
-// ─────────────────────────────────────────────────────────────────────────────
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun ModalidadeSegmentedButton(
-    selected: Modalidade,
-    onSelect: (Modalidade) -> Unit
-) {
-    val options = Modalidade.entries.toList()
-    SingleChoiceSegmentedButtonRow(modifier = Modifier.fillMaxWidth()) {
-        options.forEachIndexed { index, modalidade ->
-            SegmentedButton(
-                shape = SegmentedButtonDefaults.itemShape(index = index, count = options.size),
-                onClick = { onSelect(modalidade) },
-                selected = selected == modalidade,
-                label = {
-                    Text(
-                        text = when (modalidade) {
-                            Modalidade.MENSAL -> "Mensal"
-                            Modalidade.ANUAL -> "Anual"
-                        }
-                    )
-                }
-            )
-        }
-    }
-}
-
-// ─────────────────────────────────────────────────────────────────────────────
-// Component: Category Filter Chips (wrapping row)
-// ─────────────────────────────────────────────────────────────────────────────
-@Composable
-private fun CategoriaChipsGroup(
-    selected: CategoriaAssinatura?,
-    onSelect: (CategoriaAssinatura) -> Unit
-) {
-    val emojiMap = mapOf(
-        CategoriaAssinatura.STREAMING to "🎬",
-        CategoriaAssinatura.MUSICA to "🎵",
-        CategoriaAssinatura.JOGOS to "🎮",
-        CategoriaAssinatura.PRODUTIVIDADE to "💼",
-        CategoriaAssinatura.EDUCACAO to "📚",
-        CategoriaAssinatura.SAUDE to "🏥",
-        CategoriaAssinatura.FINANCAS to "💰",
-        CategoriaAssinatura.OUTROS to "📦"
-    )
-
-    val all = CategoriaAssinatura.entries.toList()
-    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        all.chunked(2).forEach { rowItems ->
-            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                rowItems.forEach { categoria ->
-                    FilterChip(
-                        selected = selected == categoria,
-                        onClick = { onSelect(categoria) },
-                        label = {
-                            Text(
-                                text = "${emojiMap[categoria]} ${categoria.label}",
-                                maxLines = 1,
-                                overflow = TextOverflow.Ellipsis
-                            )
-                        },
-                        modifier = Modifier.weight(1f)
-                    )
-                }
-                if (rowItems.size == 1) Spacer(Modifier.weight(1f))
-            }
-        }
-    }
-}
-
-// ─────────────────────────────────────────────────────────────────────────────
-// Atomic helpers
-// ─────────────────────────────────────────────────────────────────────────────
-@Composable
-private fun FieldLabel(text: String) {
-    Text(
-        text = text,
-        style = MaterialTheme.typography.labelSmall,
-        fontWeight = FontWeight.Medium,
-        color = Primary,
-        modifier = Modifier.padding(start = 16.dp)
-    )
-}
-
-@Composable
-private fun ErrorSupportText(message: String) {
-    Text(
-        text = message,
-        style = MaterialTheme.typography.bodySmall,
-        color = Error,
-        modifier = Modifier.padding(start = 16.dp, top = 4.dp)
-    )
-}
 
 
 

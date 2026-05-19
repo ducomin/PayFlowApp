@@ -1,4 +1,4 @@
-package br.com.payflowapplication.db
+package br.com.payflowapplication.data.db
 
 import androidx.room.Database
 import androidx.room.RoomDatabase

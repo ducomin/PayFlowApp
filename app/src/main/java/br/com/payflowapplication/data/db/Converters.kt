@@ -1,4 +1,4 @@
-package br.com.payflowapplication.db
+package br.com.payflowapplication.data.db
 
 import androidx.room.TypeConverter
 import br.com.payflowapplication.model.CategoriaAssinatura

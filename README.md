@@ -86,26 +86,59 @@ Ou, se preferir imagens por tela:
 - gerenciamento de rotas com Navigation Compose
 - controle de estado com StateFlow/ViewModel
 
-### Estrutura de diretorio
+### Estrutura de diretorio (atual do projeto)
 
 ```text
-PayFlow/
+PayFlowApp/
 ├── app/
-│   ├── src/main/java/com/payflow/
-│   │   ├── MainActivity.kt
-│   │   ├── navigation/
-│   │   ├── ui/
-│   │   │   ├── theme/
-│   │   │   ├── components/
-│   │   │   ├── screens/
-│   │   ├── data/
-│   │   ├── domain/
-│   │   ├── viewmodel/
-│   ├── res/
-│   ├── build.gradle.kts
+│   ├── src/main/
+│   │   ├── java/br/com/payflowapplication/
+│   │   │   ├── MainActivity.kt
+│   │   │   ├── PayFlowApp.kt
+│   │   │   ├── data/
+│   │   │   │   ├── db/
+│   │   │   │   └── repository/
+│   │   │   ├── di/
+│   │   │   ├── model/
+│   │   │   ├── navigation/
+│   │   │   ├── ui/
+│   │   │   │   └── theme/
+│   │   │   ├── view/
+│   │   │   │   ├── components/
+│   │   │   │   └── screens/
+│   │   │   └── viewmodels/
+│   │   ├── AndroidManifest.xml
+│   │   └── res/
+│   └── build.gradle.kts
 ├── build.gradle.kts
+├── gradle/
 ├── settings.gradle.kts
+└── README.md
 ```
+
+### Legendas da estrutura
+
+- `PayFlowApp/`: raiz do projeto Android multi-modulo (neste caso, com modulo principal `app`).
+- `app/`: modulo de aplicativo Android (codigo-fonte, recursos e configuracao do modulo).
+- `app/src/main/java/br/com/payflowapplication/`: pacote base do app.
+- `MainActivity.kt`: Activity de entrada que hospeda a UI Compose.
+- `PayFlowApp.kt`: classe `Application` para inicializacao global (ex.: Hilt).
+- `data/`: camada de dados (fontes locais/remotas e acesso a dados).
+- `data/db/`: classes de banco local com Room (DAO, database, converters).
+- `data/repository/`: repositorios que centralizam acesso aos dados para os ViewModels.
+- `di/`: modulos de injeção de dependencia (providers/bindings do Hilt).
+- `model/`: modelos de dominio/entidades usados pela aplicacao.
+- `navigation/`: definicao de rotas e grafo de navegacao (Navigation Compose).
+- `ui/theme/`: tema visual do app (cores, tipografia e estilos do Compose).
+- `view/`: camada de apresentacao em Compose.
+- `view/components/`: componentes reutilizaveis de UI.
+- `view/screens/`: telas completas do app (fluxos de interface).
+- `viewmodels/`: ViewModels e estado de tela (StateFlow/LiveData).
+- `app/src/main/res/`: recursos Android (drawables, values, icones, xml etc.).
+- `app/src/main/AndroidManifest.xml`: manifesto com componentes e configuracoes do app.
+- `build.gradle.kts` (raiz e modulo): scripts Gradle de build/dependencias.
+- `gradle/`: configuracoes do wrapper/versionamento de plugins e libs.
+- `settings.gradle.kts`: declaracao de modulos e repositorios do projeto.
 
 ## Pre-requisitos e Como Rodar
 

@@ -2,8 +2,8 @@ package br.com.payflowapplication.di
 
 import android.content.Context
 import androidx.room.Room
-import br.com.payflowapplication.db.AssinaturaDao
-import br.com.payflowapplication.db.PayFlowDatabase
+import br.com.payflowapplication.data.db.AssinaturaDao
+import br.com.payflowapplication.data.db.PayFlowDatabase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

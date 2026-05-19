@@ -1,6 +1,6 @@
-package br.com.payflowapplication.repository
+package br.com.payflowapplication.data.repository
 
-import br.com.payflowapplication.db.AssinaturaDao
+import br.com.payflowapplication.data.db.AssinaturaDao
 import br.com.payflowapplication.model.Assinatura
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
