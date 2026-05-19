@@ -24,14 +24,14 @@ fun CategoriaChipsGroup(
     modifier: Modifier = Modifier
 ) {
     val emojiMap = mapOf(
-        CategoriaAssinatura.STREAMING to "",
-        CategoriaAssinatura.MUSICA to "",
-        CategoriaAssinatura.JOGOS to "",
-        CategoriaAssinatura.PRODUTIVIDADE to "",
-        CategoriaAssinatura.EDUCACAO to "",
-        CategoriaAssinatura.SAUDE to "",
-        CategoriaAssinatura.FINANCAS to "",
-        CategoriaAssinatura.OUTROS to ""
+        CategoriaAssinatura.STREAMING to "🎬",
+        CategoriaAssinatura.MUSICA to "🎵",
+        CategoriaAssinatura.JOGOS to "🎮",
+        CategoriaAssinatura.PRODUTIVIDADE to "💼",
+        CategoriaAssinatura.EDUCACAO to "📚",
+        CategoriaAssinatura.SAUDE to "🏥",
+        CategoriaAssinatura.FINANCAS to "💰",
+        CategoriaAssinatura.OUTROS to "📦"
     )
 
     val all = CategoriaAssinatura.entries.toList()

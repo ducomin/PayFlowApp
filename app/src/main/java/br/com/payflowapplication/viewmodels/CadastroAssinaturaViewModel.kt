@@ -7,6 +7,7 @@ import br.com.payflowapplication.model.Assinatura
 import br.com.payflowapplication.model.CategoriaAssinatura
 import br.com.payflowapplication.model.Modalidade
 import br.com.payflowapplication.data.repository.AssinaturaRepository
+import br.com.payflowapplication.view.components.CurrencyVisualTransformation
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -56,10 +57,12 @@ class CadastroAssinaturaViewModel @Inject constructor(
     private fun loadAssinatura(id: Long) {
         viewModelScope.launch {
             repository.getById(id)?.let { assinatura ->
+                // Converte Double para dígitos inteiros de centavos: 145.00 → "14500"
+                val centavos = (assinatura.valor * 100).toLong()
                 _uiState.update {
                     it.copy(
                         nomeServico = assinatura.nomeServico,
-                        valor = assinatura.valor.toString(),
+                        valor = if (centavos > 0) centavos.toString() else "",
                         modalidade = assinatura.modalidade,
                         diaVencimento = assinatura.diaVencimento.toString(),
                         categoria = assinatura.categoria,
@@ -75,8 +78,11 @@ class CadastroAssinaturaViewModel @Inject constructor(
     fun onNomeChange(value: String) =
         _uiState.update { it.copy(nomeServico = value, nomeError = null, hasUnsavedChanges = true) }
 
-    fun onValorChange(value: String) =
-        _uiState.update { it.copy(valor = value, valorError = null, hasUnsavedChanges = true) }
+    fun onValorChange(digits: String) {
+        // Aceita apenas dígitos; remove zeros à esquerda excessivos; limita a 13 dígitos (R$ 99.999.999,99)
+        val cleaned = digits.filter { it.isDigit() }.trimStart('0').take(13)
+        _uiState.update { it.copy(valor = cleaned, valorError = null, hasUnsavedChanges = true) }
+    }
 
     fun onModalidadeChange(value: Modalidade) =
         _uiState.update { it.copy(modalidade = value, hasUnsavedChanges = true) }
@@ -100,7 +106,7 @@ class CadastroAssinaturaViewModel @Inject constructor(
             val assinatura = Assinatura(
                 id = assinaturaId,
                 nomeServico = state.nomeServico.trim(),
-                valor = state.valor.toDouble(),
+                valor = CurrencyVisualTransformation.digitsToDouble(state.valor),
                 modalidade = state.modalidade,
                 diaVencimento = state.diaVencimento.toInt(),
                 categoria = state.categoria!!,
@@ -127,8 +133,7 @@ class CadastroAssinaturaViewModel @Inject constructor(
         val nomeError = if (state.nomeServico.isBlank()) "Nome obrigatório" else null
         val valorError = when {
             state.valor.isBlank() -> "Valor obrigatório"
-            state.valor.toDoubleOrNull() == null -> "Valor inválido"
-            state.valor.toDouble() <= 0 -> "Valor deve ser maior que zero"
+            CurrencyVisualTransformation.digitsToDouble(state.valor) <= 0.0 -> "Valor deve ser maior que zero"
             else -> null
         }
         val vencimentoError = when {

@@ -18,6 +18,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import br.com.payflowapplication.ui.theme.*
 import br.com.payflowapplication.view.components.CategoriaChipsGroup
+import br.com.payflowapplication.view.components.CurrencyTextField
 import br.com.payflowapplication.view.components.ErrorSupportText
 import br.com.payflowapplication.view.components.FieldLabel
 import br.com.payflowapplication.view.components.FilledTextField
@@ -139,14 +140,11 @@ fun CadastroAssinaturaScreen(
             )
 
             // ── Valor ────────────────────────────────────────────────────────
-            FilledTextField(
+            CurrencyTextField(
                 label = "Valor *",
-                value = uiState.valor,
-                onValueChange = viewModel::onValorChange,
-                placeholder = "0,00",
-                prefix = "R$ ",
-                errorMessage = uiState.valorError,
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal)
+                digits = uiState.valor,
+                onDigitsChange = viewModel::onValorChange,
+                errorMessage = uiState.valorError
             )
 
             // ── Modalidade — SegmentedButton ────────────────────────────────
