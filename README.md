@@ -21,6 +21,7 @@ Este README segue a estrutura recomendada e os requisitos do desafio final, com 
 - [Demonstracao da Aplicacao](#demonstracao-da-aplicacao)
 - [Tecnologias Utilizadas](#tecnologias-utilizadas)
 - [Arquitetura e Estrutura de Diretorio](#arquitetura-e-estrutura-de-diretorio)
+- [Mock API Local](#mock-api-local)
 - [Pre-requisitos e Como Rodar](#pre-requisitos-e-como-rodar)
 - [Como Contribuir](#como-contribuir)
 - [Licenca](#licenca)
@@ -65,6 +66,7 @@ Ou, se preferir imagens por tela:
 - **Arquitetura**: MVVM (Model-View-ViewModel)
 - **Persistencia**: SQLite com Room ORM
 - **Networking**: Retrofit + OkHttp
+- **Mock API local**: Node.js + lowdb + tinyhttp
 - **Injecao de Dependencia**: Hilt (Dagger 2)
 - **Estado e ViewModel**: AndroidX ViewModel + StateFlow/LiveData
 - **Navegacao**: Jetpack Navigation Compose
@@ -82,7 +84,7 @@ Ou, se preferir imagens por tela:
 
 - MVVM com separacao entre UI, ViewModel, dominio e dados
 - persistencia local com Room/SQLite
-- integracao com API fake (ex.: JSON Server)
+- integracao com API fake local baseada em arquivo JSON
 - gerenciamento de rotas com Navigation Compose
 - controle de estado com StateFlow/ViewModel
 
@@ -110,6 +112,11 @@ PayFlowApp/
 │   │   ├── AndroidManifest.xml
 │   │   └── res/
 │   └── build.gradle.kts
+├── mocks/
+│   ├── db.json
+│   ├── package.json
+│   ├── server.js
+│   └── README.md
 ├── build.gradle.kts
 ├── gradle/
 ├── settings.gradle.kts
@@ -136,9 +143,41 @@ PayFlowApp/
 - `viewmodels/`: ViewModels e estado de tela (StateFlow/LiveData).
 - `app/src/main/res/`: recursos Android (drawables, values, icones, xml etc.).
 - `app/src/main/AndroidManifest.xml`: manifesto com componentes e configuracoes do app.
+- `mocks/`: servidor mock local usado para simular endpoints REST consumidos pelo app.
+- `mocks/db.json`: base de dados fake com catalogo de servicos e consumo mensal.
+- `mocks/package.json`: dependencias e script de inicializacao da mock API.
+- `mocks/server.js`: servidor HTTP local que expoe os endpoints fake.
+- `mocks/README.md`: documentacao detalhada de uso da API mock.
 - `build.gradle.kts` (raiz e modulo): scripts Gradle de build/dependencias.
 - `gradle/`: configuracoes do wrapper/versionamento de plugins e libs.
 - `settings.gradle.kts`: declaracao de modulos e repositorios do projeto.
+
+## Mock API Local
+
+O projeto possui uma API fake local no diretorio `mocks/`, usada para apoiar o desenvolvimento e os testes de integracao do app Android.
+
+Ela atende cenarios como:
+
+- busca de servicos no cadastro de assinatura;
+- listagem de streamings disponiveis;
+- consulta de consumo mensal para identificar assinaturas pouco utilizadas.
+
+### Endpoints principais
+
+```text
+GET /api/v1/streamings
+GET /api/v1/streamings/search?nome=net
+GET /api/v1/streamings/:username/consumo_mensal?nome=netflix&anomes=2026-05
+```
+
+### Documentacao detalhada
+
+Consulte o arquivo `mocks/README.md` para:
+
+- modo de uso;
+- estrutura do diretorio;
+- legenda dos arquivos;
+- exemplos de chamadas.
 
 ## Pre-requisitos e Como Rodar
 
@@ -148,11 +187,22 @@ PayFlowApp/
 - JDK 17+
 - Android SDK configurado
 - Emulador Android ou dispositivo fisico
+- Node.js + npm (para subir a mock API local)
 
 ### Como rodar (Windows PowerShell)
 
 ```powershell
 git clone <URL_DO_REPOSITORIO>
+cd PayFlowApp
+.\gradlew.bat tasks
+cd .\mocks
+npm install
+npm start
+```
+
+Em outro terminal:
+
+```powershell
 cd PayFlowApp
 .\gradlew.bat tasks
 .\gradlew.bat assembleDebug
@@ -165,11 +215,21 @@ cd PayFlowApp
 git clone <URL_DO_REPOSITORIO>
 cd PayFlowApp
 ./gradlew tasks
+cd ./mocks
+npm install
+npm start
+```
+
+Em outro terminal:
+
+```bash
+cd PayFlowApp
+./gradlew tasks
 ./gradlew assembleDebug
 ./gradlew test
 ```
 
-> Observacao: os comandos acima sao o fluxo padrao para projetos Android com Gradle Wrapper. Ajuste o nome do repositorio/pasta conforme seu remoto.
+> Observacao: a mock API sobe por padrao em `http://localhost:3000`. Para emulador Android, a integracao normalmente usa `http://10.0.2.2:3000/`.
 
 ## Como Contribuir
 
