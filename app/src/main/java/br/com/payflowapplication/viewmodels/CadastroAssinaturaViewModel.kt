@@ -9,6 +9,8 @@ import br.com.payflowapplication.model.Modalidade
 import br.com.payflowapplication.data.repository.AssinaturaRepository
 import br.com.payflowapplication.view.components.CurrencyVisualTransformation
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -17,20 +19,17 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 data class CadastroAssinaturaUiState(
-    // form fields
     val nomeServico: String = "",
     val valor: String = "",
     val modalidade: Modalidade = Modalidade.MENSAL,
     val diaVencimento: String = "",
     val categoria: CategoriaAssinatura? = null,
     val urlServico: String = "",
-    // field errors
     val nomeError: String? = null,
     val valorError: String? = null,
     val vencimentoError: String? = null,
     val categoriaError: String? = null,
     val urlError: String? = null,
-    // screen state
     val isSaving: Boolean = false,
     val savedSuccessfully: Boolean = false,
     val isEditMode: Boolean = false,
@@ -48,16 +47,16 @@ class CadastroAssinaturaViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(CadastroAssinaturaUiState())
     val uiState: StateFlow<CadastroAssinaturaUiState> = _uiState.asStateFlow()
 
+    /** Debounce job for async duplicate-name check while the user types */
+    private var checkNomeJob: Job? = null
+
     init {
-        if (assinaturaId != 0L) {
-            loadAssinatura(assinaturaId)
-        }
+        if (assinaturaId != 0L) loadAssinatura(assinaturaId)
     }
 
     private fun loadAssinatura(id: Long) {
         viewModelScope.launch {
             repository.getById(id)?.let { assinatura ->
-                // Converte Double para dígitos inteiros de centavos: 145.00 → "14500"
                 val centavos = (assinatura.valor * 100).toLong()
                 _uiState.update {
                     it.copy(
@@ -75,11 +74,28 @@ class CadastroAssinaturaViewModel @Inject constructor(
         }
     }
 
-    fun onNomeChange(value: String) =
+    // ── Field handlers ────────────────────────────────────────────────────────
+
+    fun onNomeChange(value: String) {
+        // Update field immediately and clear previous error
         _uiState.update { it.copy(nomeServico = value, nomeError = null, hasUnsavedChanges = true) }
 
+        // Debounce: wait 300 ms after the user stops typing, then check duplicates
+        checkNomeJob?.cancel()
+        checkNomeJob = viewModelScope.launch {
+            delay(300L)
+            val trimmed = value.trim()
+            if (trimmed.isBlank()) return@launch
+            val duplicate = repository.existsByNome(trimmed, excludeId = assinaturaId)
+            if (duplicate) {
+                _uiState.update {
+                    it.copy(nomeError = "Já existe uma assinatura com o nome \"$trimmed\"")
+                }
+            }
+        }
+    }
+
     fun onValorChange(digits: String) {
-        // Aceita apenas dígitos; remove zeros à esquerda excessivos; limita a 13 dígitos (R$ 99.999.999,99)
         val cleaned = digits.filter { it.isDigit() }.trimStart('0').take(13)
         _uiState.update { it.copy(valor = cleaned, valorError = null, hasUnsavedChanges = true) }
     }
@@ -96,13 +112,26 @@ class CadastroAssinaturaViewModel @Inject constructor(
     fun onUrlChange(value: String) =
         _uiState.update { it.copy(urlServico = value, urlError = null, hasUnsavedChanges = true) }
 
+    // ── Save ──────────────────────────────────────────────────────────────────
+
     fun salvar() {
-        if (!validate()) return
-
-        val state = _uiState.value
-        _uiState.update { it.copy(isSaving = true) }
-
         viewModelScope.launch {
+            // Step 1 — sync format validation
+            if (!validate()) return@launch
+
+            val state = _uiState.value
+
+            // Step 2 — async duplicate check (catches race condition if debounce hasn't fired yet)
+            val duplicate = repository.existsByNome(state.nomeServico.trim(), excludeId = assinaturaId)
+            if (duplicate) {
+                _uiState.update {
+                    it.copy(nomeError = "Já existe uma assinatura com o nome \"${state.nomeServico.trim()}\"")
+                }
+                return@launch
+            }
+
+            // Step 3 — persist
+            _uiState.update { it.copy(isSaving = true) }
             val assinatura = Assinatura(
                 id = assinaturaId,
                 nomeServico = state.nomeServico.trim(),
@@ -118,28 +147,29 @@ class CadastroAssinaturaViewModel @Inject constructor(
     }
 
     fun resetSavedFlag() = _uiState.update {
-        // Se não é modo edição, limpa todos os campos após salvar
-        if (!it.isEditMode) {
-            CadastroAssinaturaUiState()
-        } else {
-            it.copy(savedSuccessfully = false)
-        }
+        if (!it.isEditMode) CadastroAssinaturaUiState() else it.copy(savedSuccessfully = false)
     }
+
+    // ── Format-only validation (sync) ────────────────────────────────────────
 
     private fun validate(): Boolean {
         val state = _uiState.value
-        var valid = true
 
-        val nomeError = if (state.nomeServico.isBlank()) "Nome obrigatório" else null
+        // If debounce already set a duplicate error, respect it
+        val nomeError = when {
+            state.nomeServico.isBlank() -> "Nome obrigatório"
+            state.nomeError != null     -> state.nomeError   // keep debounce error
+            else                        -> null
+        }
         val valorError = when {
             state.valor.isBlank() -> "Valor obrigatório"
             CurrencyVisualTransformation.digitsToDouble(state.valor) <= 0.0 -> "Valor deve ser maior que zero"
             else -> null
         }
         val vencimentoError = when {
-            state.diaVencimento.isBlank() -> "Vencimento obrigatório"
-            state.diaVencimento.toIntOrNull() == null -> "Dia inválido"
-            state.diaVencimento.toInt() !in 1..31 -> "Dia deve ser entre 1 e 31"
+            state.diaVencimento.isBlank()              -> "Vencimento obrigatório"
+            state.diaVencimento.toIntOrNull() == null  -> "Dia inválido"
+            state.diaVencimento.toInt() !in 1..31      -> "Dia deve ser entre 1 e 31"
             else -> null
         }
         val categoriaError = if (state.categoria == null) "Categoria obrigatória" else null
@@ -148,9 +178,8 @@ class CadastroAssinaturaViewModel @Inject constructor(
             !state.urlServico.startsWith("https://")
         ) "URL deve começar com http:// ou https://" else null
 
-        if (listOf(nomeError, valorError, vencimentoError, categoriaError, urlError).any { it != null }) {
-            valid = false
-        }
+        val hasError = listOf(nomeError, valorError, vencimentoError, categoriaError, urlError)
+            .any { it != null }
 
         _uiState.update {
             it.copy(
@@ -161,7 +190,6 @@ class CadastroAssinaturaViewModel @Inject constructor(
                 urlError = urlError
             )
         }
-        return valid
+        return !hasError
     }
 }
-
