@@ -23,6 +23,7 @@ target/
 out/
 *.log
 *.tmp
+*.zip
 local.properties
 
 ### NetBeans ###
@@ -41,6 +42,11 @@ META-INF/
 .github
 .docs
 .config
+.package-lock.json
+package-lock.json
+.yarn.lock
+node_modules/
+dist/
 
 ### Environment Variables ###
 .env

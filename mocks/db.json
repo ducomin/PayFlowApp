@@ -1,0 +1,435 @@
+{
+  "streamings": [
+    {
+      "id": "1",
+      "nome": "Amazon Prime Video",
+      "logo_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/Amazon_Prime_Video_logo.svg/250px-Amazon_Prime_Video_logo.svg.png",
+      "categoria_principal": "Filmes e Series"
+    },
+    {
+      "id": "2",
+      "nome": "Netflix",
+      "logo_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/08/Netflix_2015_logo.svg/250px-Netflix_2015_logo.svg.png",
+      "categoria_principal": "Filmes e Series"
+    },
+    {
+      "id": "3",
+      "nome": "Disney+",
+      "logo_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Disney%2B_logo.svg/250px-Disney%2B_logo.svg.png",
+      "categoria_principal": "Filmes e Series"
+    },
+    {
+      "id": "4",
+      "nome": "HBO Max",
+      "logo_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1f/Max_logo.svg/250px-Max_logo.svg.png",
+      "categoria_principal": "Filmes e Series"
+    },
+    {
+      "id": "5",
+      "nome": "Globoplay",
+      "logo_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/Globoplay_logo.svg/250px-Globoplay_logo.svg.png",
+      "categoria_principal": "Filmes e Series"
+    },
+    {
+      "id": "6",
+      "nome": "Apple TV+",
+      "logo_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/28/Apple_TV_Plus_Logo.svg/250px-Apple_TV_Plus_Logo.svg.png",
+      "categoria_principal": "Filmes e Series"
+    },
+    {
+      "id": "7",
+      "nome": "Paramount+",
+      "logo_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Paramount_Plus_logo.svg/250px-Paramount_Plus_logo.svg.png",
+      "categoria_principal": "Filmes e Series"
+    },
+    {
+      "id": "8",
+      "nome": "Crunchyroll",
+      "logo_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/08/Crunchyroll_logo.svg/250px-Crunchyroll_logo.svg.png",
+      "categoria_principal": "Animacao e Anime"
+    },
+    {
+      "id": "9",
+      "nome": "Looke",
+      "logo_url": "https://play-lh.googleusercontent.com/1JBgHxrM7HnmJ7B8KW_4oo7A2M8Vo3Pj3DjGLXTFfj4bCbYH3Zi-FTbAjVjhJBApg=w240-h480-rw",
+      "categoria_principal": "Filmes e Series"
+    },
+    {
+      "id": "10",
+      "nome": "Mubi",
+      "logo_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b8/MUBI_logo.svg/250px-MUBI_logo.svg.png",
+      "categoria_principal": "Filmes e Series"
+    },
+    {
+      "id": "11",
+      "nome": "Spotify",
+      "logo_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/19/Spotify_logo_without_text.svg/250px-Spotify_logo_without_text.svg.png",
+      "categoria_principal": "Streaming de Musica"
+    },
+    {
+      "id": "12",
+      "nome": "Deezer",
+      "logo_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4a/Deezer_logo.svg/250px-Deezer_logo.svg.png",
+      "categoria_principal": "Streaming de Musica"
+    },
+    {
+      "id": "13",
+      "nome": "Amazon Music",
+      "logo_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9b/Amazon_Music_logo.svg/250px-Amazon_Music_logo.svg.png",
+      "categoria_principal": "Streaming de Musica"
+    },
+    {
+      "id": "14",
+      "nome": "YouTube Music",
+      "logo_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Youtube_Music_icon.svg/250px-Youtube_Music_icon.svg.png",
+      "categoria_principal": "Streaming de Musica"
+    },
+    {
+      "id": "15",
+      "nome": "Smart Fit",
+      "logo_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1d/Smart_Fit_logo.svg/250px-Smart_Fit_logo.svg.png",
+      "categoria_principal": "Academia"
+    },
+    {
+      "id": "16",
+      "nome": "Bluefit",
+      "logo_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/66/Bluefit_logo.png/250px-Bluefit_logo.png",
+      "categoria_principal": "Academia"
+    },
+    {
+      "id": "17",
+      "nome": "Gympass",
+      "logo_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/Gympass_logo.svg/250px-Gympass_logo.svg.png",
+      "categoria_principal": "Academia"
+    },
+    {
+      "id": "18",
+      "nome": "TotalPass",
+      "logo_url": "https://seeklogo.com/images/T/totalpass-logo-FA0FB9D3F8-seeklogo.com.png",
+      "categoria_principal": "Academia"
+    },
+    {
+      "id": "19",
+      "nome": "SKY",
+      "logo_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/57/Sky_Group_logo_2020.svg/250px-Sky_Group_logo_2020.svg.png",
+      "categoria_principal": "TV por Assinatura"
+    },
+    {
+      "id": "20",
+      "nome": "Claro tv+",
+      "logo_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a1/Claro_logo.svg/250px-Claro_logo.svg.png",
+      "categoria_principal": "TV por Assinatura"
+    },
+    {
+      "id": "21",
+      "nome": "Vivo Play",
+      "logo_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Vivo_logo_2020.svg/250px-Vivo_logo_2020.svg.png",
+      "categoria_principal": "TV por Assinatura"
+    },
+    {
+      "id": "22",
+      "nome": "Oi TV",
+      "logo_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8b/Oi_logo_2016.svg/250px-Oi_logo_2016.svg.png",
+      "categoria_principal": "TV por Assinatura"
+    }
+  ],
+  "consumo_mensal": [
+    {
+      "streaming_id": "1",
+      "nome": "amazon prime video",
+      "username": "*",
+      "mes_referencia": "2026-05",
+      "total_dias_no_mes": 31,
+      "dias_utilizados": 20,
+      "total_minutos_mes": 2100
+    },
+    {
+      "streaming_id": "2",
+      "nome": "netflix",
+      "username": "*",
+      "mes_referencia": "2026-05",
+      "total_dias_no_mes": 31,
+      "dias_utilizados": 25,
+      "total_minutos_mes": 3800
+    },
+    {
+      "streaming_id": "3",
+      "nome": "disney+",
+      "username": "*",
+      "mes_referencia": "2026-05",
+      "total_dias_no_mes": 31,
+      "dias_utilizados": 8,
+      "total_minutos_mes": 720
+    },
+    {
+      "streaming_id": "4",
+      "nome": "hbo max",
+      "username": "*",
+      "mes_referencia": "2026-05",
+      "total_dias_no_mes": 31,
+      "dias_utilizados": 5,
+      "total_minutos_mes": 410
+    },
+    {
+      "streaming_id": "5",
+      "nome": "globoplay",
+      "username": "*",
+      "mes_referencia": "2026-05",
+      "total_dias_no_mes": 31,
+      "dias_utilizados": 14,
+      "total_minutos_mes": 1560
+    },
+    {
+      "streaming_id": "6",
+      "nome": "apple tv+",
+      "username": "*",
+      "mes_referencia": "2026-05",
+      "total_dias_no_mes": 31,
+      "dias_utilizados": 3,
+      "total_minutos_mes": 180
+    },
+    {
+      "streaming_id": "7",
+      "nome": "paramount+",
+      "username": "*",
+      "mes_referencia": "2026-05",
+      "total_dias_no_mes": 31,
+      "dias_utilizados": 4,
+      "total_minutos_mes": 260
+    },
+    {
+      "streaming_id": "8",
+      "nome": "crunchyroll",
+      "username": "*",
+      "mes_referencia": "2026-05",
+      "total_dias_no_mes": 31,
+      "dias_utilizados": 22,
+      "total_minutos_mes": 4200
+    },
+    {
+      "streaming_id": "9",
+      "nome": "looke",
+      "username": "*",
+      "mes_referencia": "2026-05",
+      "total_dias_no_mes": 31,
+      "dias_utilizados": 2,
+      "total_minutos_mes": 90
+    },
+    {
+      "streaming_id": "10",
+      "nome": "mubi",
+      "username": "*",
+      "mes_referencia": "2026-05",
+      "total_dias_no_mes": 31,
+      "dias_utilizados": 6,
+      "total_minutos_mes": 480
+    },
+    {
+      "streaming_id": "11",
+      "nome": "spotify",
+      "username": "*",
+      "mes_referencia": "2026-05",
+      "total_dias_no_mes": 31,
+      "dias_utilizados": 29,
+      "total_minutos_mes": 8700
+    },
+    {
+      "streaming_id": "12",
+      "nome": "deezer",
+      "username": "*",
+      "mes_referencia": "2026-05",
+      "total_dias_no_mes": 31,
+      "dias_utilizados": 7,
+      "total_minutos_mes": 630
+    },
+    {
+      "streaming_id": "13",
+      "nome": "amazon music",
+      "username": "*",
+      "mes_referencia": "2026-05",
+      "total_dias_no_mes": 31,
+      "dias_utilizados": 12,
+      "total_minutos_mes": 960
+    },
+    {
+      "streaming_id": "14",
+      "nome": "youtube music",
+      "username": "*",
+      "mes_referencia": "2026-05",
+      "total_dias_no_mes": 31,
+      "dias_utilizados": 18,
+      "total_minutos_mes": 2450
+    },
+    {
+      "streaming_id": "15",
+      "nome": "smart fit",
+      "username": "*",
+      "mes_referencia": "2026-05",
+      "total_dias_no_mes": 31,
+      "dias_utilizados": 16,
+      "total_minutos_mes": 960
+    },
+    {
+      "streaming_id": "16",
+      "nome": "bluefit",
+      "username": "*",
+      "mes_referencia": "2026-05",
+      "total_dias_no_mes": 31,
+      "dias_utilizados": 3,
+      "total_minutos_mes": 180
+    },
+    {
+      "streaming_id": "17",
+      "nome": "gympass",
+      "username": "*",
+      "mes_referencia": "2026-05",
+      "total_dias_no_mes": 31,
+      "dias_utilizados": 10,
+      "total_minutos_mes": 600
+    },
+    {
+      "streaming_id": "18",
+      "nome": "totalpass",
+      "username": "*",
+      "mes_referencia": "2026-05",
+      "total_dias_no_mes": 31,
+      "dias_utilizados": 2,
+      "total_minutos_mes": 120
+    },
+    {
+      "streaming_id": "19",
+      "nome": "sky",
+      "username": "*",
+      "mes_referencia": "2026-05",
+      "total_dias_no_mes": 31,
+      "dias_utilizados": 21,
+      "total_minutos_mes": 3150
+    },
+    {
+      "streaming_id": "20",
+      "nome": "claro tv+",
+      "username": "*",
+      "mes_referencia": "2026-05",
+      "total_dias_no_mes": 31,
+      "dias_utilizados": 9,
+      "total_minutos_mes": 810
+    },
+    {
+      "streaming_id": "21",
+      "nome": "vivo play",
+      "username": "*",
+      "mes_referencia": "2026-05",
+      "total_dias_no_mes": 31,
+      "dias_utilizados": 5,
+      "total_minutos_mes": 300
+    },
+    {
+      "streaming_id": "22",
+      "nome": "oi tv",
+      "username": "*",
+      "mes_referencia": "2026-05",
+      "total_dias_no_mes": 31,
+      "dias_utilizados": 1,
+      "total_minutos_mes": 60
+    },
+    {
+      "streaming_id": "1",
+      "nome": "amazon prime video",
+      "username": "*",
+      "mes_referencia": "2026-04",
+      "total_dias_no_mes": 30,
+      "dias_utilizados": 18,
+      "total_minutos_mes": 1800
+    },
+    {
+      "streaming_id": "2",
+      "nome": "netflix",
+      "username": "*",
+      "mes_referencia": "2026-04",
+      "total_dias_no_mes": 30,
+      "dias_utilizados": 24,
+      "total_minutos_mes": 3500
+    },
+    {
+      "streaming_id": "3",
+      "nome": "disney+",
+      "username": "*",
+      "mes_referencia": "2026-04",
+      "total_dias_no_mes": 30,
+      "dias_utilizados": 4,
+      "total_minutos_mes": 320
+    },
+    {
+      "streaming_id": "4",
+      "nome": "hbo max",
+      "username": "*",
+      "mes_referencia": "2026-04",
+      "total_dias_no_mes": 30,
+      "dias_utilizados": 12,
+      "total_minutos_mes": 1100
+    },
+    {
+      "streaming_id": "5",
+      "nome": "globoplay",
+      "username": "*",
+      "mes_referencia": "2026-04",
+      "total_dias_no_mes": 30,
+      "dias_utilizados": 11,
+      "total_minutos_mes": 1320
+    },
+    {
+      "streaming_id": "6",
+      "nome": "apple tv+",
+      "username": "*",
+      "mes_referencia": "2026-04",
+      "total_dias_no_mes": 30,
+      "dias_utilizados": 2,
+      "total_minutos_mes": 100
+    },
+    {
+      "streaming_id": "7",
+      "nome": "paramount+",
+      "username": "*",
+      "mes_referencia": "2026-04",
+      "total_dias_no_mes": 30,
+      "dias_utilizados": 6,
+      "total_minutos_mes": 480
+    },
+    {
+      "streaming_id": "8",
+      "nome": "crunchyroll",
+      "username": "*",
+      "mes_referencia": "2026-04",
+      "total_dias_no_mes": 30,
+      "dias_utilizados": 20,
+      "total_minutos_mes": 3900
+    },
+    {
+      "streaming_id": "11",
+      "nome": "spotify",
+      "username": "*",
+      "mes_referencia": "2026-04",
+      "total_dias_no_mes": 30,
+      "dias_utilizados": 28,
+      "total_minutos_mes": 8100
+    },
+    {
+      "streaming_id": "14",
+      "nome": "youtube music",
+      "username": "*",
+      "mes_referencia": "2026-04",
+      "total_dias_no_mes": 30,
+      "dias_utilizados": 15,
+      "total_minutos_mes": 2000
+    },
+    {
+      "streaming_id": "15",
+      "nome": "smart fit",
+      "username": "*",
+      "mes_referencia": "2026-04",
+      "total_dias_no_mes": 30,
+      "dias_utilizados": 12,
+      "total_minutos_mes": 720
+    }
+  ]
+}

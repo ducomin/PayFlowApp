@@ -24,6 +24,7 @@ import br.com.payflowapplication.view.components.FieldLabel
 import br.com.payflowapplication.view.components.FilledTextField
 import br.com.payflowapplication.view.components.ModalidadeSegmentedButton
 import br.com.payflowapplication.view.components.StepIndicator
+import br.com.payflowapplication.view.components.StreamingAutocompleteField
 import br.com.payflowapplication.viewmodels.CadastroAssinaturaViewModel
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -130,12 +131,16 @@ fun CadastroAssinaturaScreen(
 
             Spacer(Modifier.height(16.dp))
 
-            // ── Nome do Serviço ─────────────────────────────────────────────
-            FilledTextField(
+            // ── Nome do Serviço — Autocomplete ──────────────────────────────
+            StreamingAutocompleteField(
                 label = "Nome do serviço *",
                 value = uiState.nomeServico,
                 onValueChange = viewModel::onNomeChange,
-                placeholder = "Ex: Netflix, Spotify…",
+                suggestions = uiState.streamingSuggestions,
+                isLoading = uiState.isLoadingSuggestions,
+                showSuggestions = uiState.showSuggestions,
+                onSuggestionSelected = viewModel::onStreamingSelected,
+                onDismiss = viewModel::onDismissSuggestions,
                 errorMessage = uiState.nomeError
             )
 

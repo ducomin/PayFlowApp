@@ -1,0 +1,11 @@
+{
+  "type": "module",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "@tinyhttp/app": "^3.0.7",
+    "@tinyhttp/cors": "^2.0.1",
+    "lowdb": "^7.0.1"
+  }
+}

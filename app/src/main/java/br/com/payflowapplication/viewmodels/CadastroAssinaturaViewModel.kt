@@ -6,7 +6,9 @@ import androidx.lifecycle.viewModelScope
 import br.com.payflowapplication.model.Assinatura
 import br.com.payflowapplication.model.CategoriaAssinatura
 import br.com.payflowapplication.model.Modalidade
+import br.com.payflowapplication.model.Streaming
 import br.com.payflowapplication.data.repository.AssinaturaRepository
+import br.com.payflowapplication.data.repository.StreamingRepository
 import br.com.payflowapplication.view.components.CurrencyVisualTransformation
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
@@ -33,12 +35,17 @@ data class CadastroAssinaturaUiState(
     val isSaving: Boolean = false,
     val savedSuccessfully: Boolean = false,
     val isEditMode: Boolean = false,
-    val hasUnsavedChanges: Boolean = false
+    val hasUnsavedChanges: Boolean = false,
+    // Streaming autocomplete state
+    val streamingSuggestions: List<Streaming> = emptyList(),
+    val isLoadingSuggestions: Boolean = false,
+    val showSuggestions: Boolean = false
 )
 
 @HiltViewModel
 class CadastroAssinaturaViewModel @Inject constructor(
     private val repository: AssinaturaRepository,
+    private val streamingRepository: StreamingRepository,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
@@ -49,6 +56,9 @@ class CadastroAssinaturaViewModel @Inject constructor(
 
     /** Debounce job for async duplicate-name check while the user types */
     private var checkNomeJob: Job? = null
+
+    /** Debounce job for streaming suggestion search */
+    private var searchStreamingJob: Job? = null
 
     init {
         if (assinaturaId != 0L) loadAssinatura(assinaturaId)
@@ -93,6 +103,45 @@ class CadastroAssinaturaViewModel @Inject constructor(
                 }
             }
         }
+
+        // Debounce: search streamings for autocomplete suggestions
+        searchStreamingJob?.cancel()
+        if (value.length < 2) {
+            _uiState.update { it.copy(streamingSuggestions = emptyList(), showSuggestions = false) }
+            return
+        }
+        searchStreamingJob = viewModelScope.launch {
+            delay(300L)
+            _uiState.update { it.copy(isLoadingSuggestions = true) }
+            val results = streamingRepository.search(value)
+            _uiState.update {
+                it.copy(
+                    streamingSuggestions = results,
+                    isLoadingSuggestions = false,
+                    showSuggestions = results.isNotEmpty()
+                )
+            }
+        }
+    }
+
+    fun onStreamingSelected(streaming: Streaming) {
+        _uiState.update {
+            it.copy(
+                nomeServico = streaming.nome,
+                urlServico = it.urlServico, // preserve existing URL if already set
+                nomeError = null,
+                showSuggestions = false,
+                streamingSuggestions = emptyList(),
+                hasUnsavedChanges = true
+            )
+        }
+        // Also cancel pending jobs since a suggestion was picked
+        checkNomeJob?.cancel()
+        searchStreamingJob?.cancel()
+    }
+
+    fun onDismissSuggestions() {
+        _uiState.update { it.copy(showSuggestions = false) }
     }
 
     fun onValorChange(digits: String) {
