@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.runtime.*
 import br.com.payflowapplication.navigation.PayFlowNavGraph
 import br.com.payflowapplication.ui.theme.PayFlowTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -12,13 +13,30 @@ import dagger.hilt.android.AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
+
         enableEdgeToEdge()
+
         setContent {
-            PayFlowTheme {
-                PayFlowNavGraph()
+
+            var darkTheme by remember {
+                mutableStateOf(true)
+            }
+
+            PayFlowTheme(
+                darkTheme = darkTheme
+            ) {
+
+                PayFlowNavGraph(
+
+                    darkTheme = darkTheme,
+
+                    onThemeChange = {
+                        darkTheme = it
+                    }
+                )
             }
         }
     }
 }
-

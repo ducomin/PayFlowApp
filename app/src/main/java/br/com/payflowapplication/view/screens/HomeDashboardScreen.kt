@@ -30,6 +30,7 @@ import br.com.payflowapplication.viewmodels.HomeDashboardViewModel
 fun HomeDashboardScreen(
     onNovaAssinatura: () -> Unit,
     onAssinaturaClick: (Long) -> Unit,
+    onPerfilClick: () -> Unit,
     viewModel: HomeDashboardViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -53,24 +54,26 @@ fun HomeDashboardScreen(
                 },
                 actions = {
                     // Avatar button
-                    Box(
-                        modifier = Modifier
-                            .padding(end = 8.dp)
-                            .size(32.dp)
-                            .clip(CircleShape)
-                            .background(
-                                Brush.linearGradient(
-                                    colors = listOf(Primary, Secondary)
-                                )
-                            ),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(
-                            text = "US",
-                            color = OnPrimary,
-                            style = MaterialTheme.typography.labelMedium,
-                            fontWeight = FontWeight.Bold
-                        )
+                    IconButton(onClick = onPerfilClick ) {
+                        Box(
+                            modifier = Modifier
+                                .padding(end = 8.dp)
+                                .size(32.dp)
+                                .clip(CircleShape)
+                                .background(
+                                    Brush.linearGradient(
+                                        colors = listOf(Primary, Secondary)
+                                    )
+                                ),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(
+                                text = "US",
+                                color = OnPrimary,
+                                style = MaterialTheme.typography.labelMedium,
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(

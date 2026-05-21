@@ -8,5 +8,8 @@ object Routes {
     const val CADASTRO_ASSINATURA = "cadastro_assinatura"
     const val CADASTRO_ASSINATURA_EDIT = "cadastro_assinatura/{assinaturaId}"
     fun editRoute(id: Long) = "cadastro_assinatura/$id"
+
+    // Perfil
+    const val PERFIL = "perfil"
 }
 
