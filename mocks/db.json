@@ -185,7 +185,7 @@
       "username": "*",
       "mes_referencia": "2026-05",
       "total_dias_no_mes": 31,
-      "dias_utilizados": 3,
+      "dias_utilizados": 5,
       "total_minutos_mes": 180
     },
     {
@@ -212,7 +212,7 @@
       "username": "*",
       "mes_referencia": "2026-05",
       "total_dias_no_mes": 31,
-      "dias_utilizados": 2,
+      "dias_utilizados": 10,
       "total_minutos_mes": 90
     },
     {

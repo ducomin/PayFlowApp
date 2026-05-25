@@ -278,6 +278,7 @@ private fun SuccessContent(
                 LowUsageBanner(
                     count = state.totalPoucoUsadas,
                     valorMensal = state.valorPoucoUsadas,
+                    assinaturas = state.assinaturasPoucoUsadas,
                     modifier = Modifier.padding(vertical = 8.dp)
                 )
             }

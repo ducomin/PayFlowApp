@@ -7,6 +7,7 @@ import br.com.payflowapplication.data.repository.StreamingRepository
 import br.com.payflowapplication.model.Assinatura
 import br.com.payflowapplication.model.CategoriaAssinatura
 import br.com.payflowapplication.model.Modalidade
+import br.com.payflowapplication.view.components.AssinaturaUso
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -39,6 +40,7 @@ sealed interface HomeDashboardUiState {
         val totalVenceHoje: Int,
         val valorPoucoUsadas: Double,
         val assinaturasFiltradas: List<AssinaturaUiItem>,
+        val assinaturasPoucoUsadas: List<AssinaturaUso>,
         val queryBusca: String,
         val categoriaFiltro: CategoriaAssinatura?,
     ) : HomeDashboardUiState
@@ -144,6 +146,18 @@ class HomeDashboardViewModel @Inject constructor(
             else
                 item.assinatura.valor
         }
+        // Build AssinaturaUso list for the banner chart
+        // usage (0..1) * 30 → approximate days used this month
+        val assinaturasPoucoUsadas = poucoUsadasList.map { item ->
+            AssinaturaUso(
+                nome     = item.assinatura.nomeServico,
+                diasUso  = (item.usage * 30).toInt(),
+                valorMes = if (item.assinatura.modalidade == Modalidade.ANUAL)
+                               item.assinatura.valor / 12.0
+                           else
+                               item.assinatura.valor,
+            )
+        }
 
         // ── Filter ──────────────────��─────────────────────────────────────────
         val filtrados = todosItens.filter { item ->
@@ -155,16 +169,17 @@ class HomeDashboardViewModel @Inject constructor(
         }
 
         return HomeDashboardUiState.Success(
-            nomeUsuario         = "Usuário",
-            mesReferencia       = mesLabel,
-            totalMensal         = totalMensal,
-            totalAtivas         = todosItens.size,
-            totalPoucoUsadas    = poucoUsadasList.size,
-            totalVenceHoje      = todosItens.count { it.venceHoje },
-            valorPoucoUsadas    = valorPoucoUsadas,
-            assinaturasFiltradas = filtrados,
-            queryBusca          = query,
-            categoriaFiltro     = categoria,
+            nomeUsuario              = "Usuário",
+            mesReferencia            = mesLabel,
+            totalMensal              = totalMensal,
+            totalAtivas              = todosItens.size,
+            totalPoucoUsadas         = poucoUsadasList.size,
+            totalVenceHoje           = todosItens.count { it.venceHoje },
+            valorPoucoUsadas         = valorPoucoUsadas,
+            assinaturasFiltradas     = filtrados,
+            assinaturasPoucoUsadas   = assinaturasPoucoUsadas,
+            queryBusca               = query,
+            categoriaFiltro          = categoria,
         )
     }
 
