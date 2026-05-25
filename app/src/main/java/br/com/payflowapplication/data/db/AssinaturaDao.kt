@@ -38,4 +38,3 @@ interface AssinaturaDao {
     @Delete
     suspend fun delete(assinatura: Assinatura)
 }
-

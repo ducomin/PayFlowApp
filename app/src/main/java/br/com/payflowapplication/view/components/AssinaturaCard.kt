@@ -14,6 +14,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import br.com.payflowapplication.model.Assinatura
 import br.com.payflowapplication.model.CategoriaAssinatura
 import br.com.payflowapplication.model.Modalidade
 import br.com.payflowapplication.ui.theme.*
@@ -25,26 +26,30 @@ import java.util.Locale
  * MD3 Elevated card for a single subscription.
  * Matches the HTML mockup — logo avatar, name, value, status chip,
  * vencimento label and LinearProgressIndicator for usage.
+ * Can be adapted for history screen by hiding the usage bar.
  */
 @Composable
 fun AssinaturaCard(
-    item: AssinaturaUiItem,
-    onClick: () -> Unit,
+    assinatura: Assinatura,
+    isHistorico: Boolean = false,
+    vencimentoLabel: String = "",
+    poucoUsada: Boolean = false,
+    venceHoje: Boolean = false,
+    usage: Float = 0f,
+    onClick: () -> Unit = {},
     modifier: Modifier = Modifier,
 ) {
-    val ass = item.assinatura
     val fmt = NumberFormat.getInstance(Locale("pt", "BR")).apply {
         minimumFractionDigits = 2
         maximumFractionDigits = 2
     }
 
-    val valorLabel = if (ass.modalidade == Modalidade.ANUAL)
-        "R$ ${fmt.format(ass.valor / 12.0)}/mês"
+    val valorLabel = if (assinatura.modalidade == Modalidade.ANUAL)
+        "R$ ${fmt.format(assinatura.valor / 12.0)}/mês"
     else
-        "R$ ${fmt.format(ass.valor)}"
+        "R$ ${fmt.format(assinatura.valor)}"
 
-    val isLowUsage = item.poucoUsada
-    val borderModifier = if (isLowUsage)
+    val borderModifier = if (poucoUsada)
         Modifier.border(1.dp, SecondaryContainer, RoundedCornerShape(12.dp))
     else Modifier
 
@@ -64,7 +69,7 @@ fun AssinaturaCard(
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 // Service logo avatar
-                ServiceAvatar(name = ass.nomeServico, categoria = ass.categoria)
+                ServiceAvatar(name = assinatura.nomeServico, categoria = assinatura.categoria)
 
                 Column(modifier = Modifier.weight(1f)) {
                     Row(
@@ -73,17 +78,26 @@ fun AssinaturaCard(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            text = ass.nomeServico,
+                            text = assinatura.nomeServico,
                             style = MaterialTheme.typography.titleSmall,
                             fontWeight = FontWeight.Medium,
                             color = OnSurface
                         )
-                        Text(
-                            text = valorLabel,
-                            style = MaterialTheme.typography.titleSmall,
-                            fontWeight = FontWeight.Bold,
-                            color = Primary
-                        )
+                        if (isHistorico) {
+                            Text(
+                                text = "R$ ${fmt.format(assinatura.valor)}",
+                                style = MaterialTheme.typography.bodyMedium,
+                                fontWeight = FontWeight.Normal,
+                                color = OnSurfaceVariant
+                            )
+                        } else {
+                            Text(
+                                text = valorLabel,
+                                style = MaterialTheme.typography.titleSmall,
+                                fontWeight = FontWeight.Bold,
+                                color = Primary
+                            )
+                        }
                     }
 
                     Spacer(Modifier.height(4.dp))
@@ -93,43 +107,77 @@ fun AssinaturaCard(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
-                        StatusChip(poucoUsada = isLowUsage, venceHoje = item.venceHoje)
-                        Text(
-                            text = item.vencimentoLabel,
-                            style = MaterialTheme.typography.labelSmall,
-                            color = OnSurfaceVariant
+                        StatusChip(
+                            isHistorico = isHistorico,
+                            poucoUsada = poucoUsada,
+                            venceHoje = venceHoje
                         )
+                        if (isHistorico) {
+                            val dateFormatter = java.time.format.DateTimeFormatter.ofPattern("dd/MM/yy")
+                            val dataFim = assinatura.dataFim?.format(dateFormatter) ?: "N/A"
+                            Text(
+                                text = "Finalizada em $dataFim",
+                                style = MaterialTheme.typography.labelSmall,
+                                color = OnSurfaceVariant
+                            )
+                        } else {
+                            Text(
+                                text = vencimentoLabel,
+                                style = MaterialTheme.typography.labelSmall,
+                                color = OnSurfaceVariant
+                            )
+                        }
                     }
                 }
             }
 
-            // Usage progress
-            Spacer(Modifier.height(10.dp))
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Text(
-                    text = "Uso este mês",
-                    style = MaterialTheme.typography.labelSmall,
-                    color = OnSurfaceVariant
-                )
-                val usagePct = (item.usage * 100).toInt()
-                val usageColor = when {
-                    item.poucoUsada -> Secondary
-                    usagePct >= 70 -> Success
-                    else -> Primary
+            // Usage progress (only if not in history mode)
+            if (!isHistorico) {
+                Spacer(Modifier.height(10.dp))
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(
+                        text = "Uso este mês",
+                        style = MaterialTheme.typography.labelSmall,
+                        color = OnSurfaceVariant
+                    )
+                    val usagePct = (usage * 100).toInt()
+                    val usageColor = when {
+                        poucoUsada -> Secondary
+                        usagePct >= 70 -> Success
+                        else -> Primary
+                    }
+                    Text(
+                        text = "$usagePct%",
+                        style = MaterialTheme.typography.labelSmall,
+                        color = usageColor
+                    )
                 }
-                Text(
-                    text = "$usagePct%",
-                    style = MaterialTheme.typography.labelSmall,
-                    color = usageColor
-                )
+                Spacer(Modifier.height(4.dp))
+                UsageProgressBar(progress = usage, poucoUsada = poucoUsada)
             }
-            Spacer(Modifier.height(4.dp))
-            UsageProgressBar(progress = item.usage, poucoUsada = isLowUsage)
         }
     }
+}
+
+@Composable
+fun AssinaturaCard(
+    item: AssinaturaUiItem,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    AssinaturaCard(
+        assinatura = item.assinatura,
+        isHistorico = false,
+        vencimentoLabel = item.vencimentoLabel,
+        poucoUsada = item.poucoUsada,
+        venceHoje = item.venceHoje,
+        usage = item.usage,
+        onClick = onClick,
+        modifier = modifier
+    )
 }
 
 @Composable
@@ -168,8 +216,9 @@ private fun categoryColor(categoria: CategoriaAssinatura): Color = when (categor
 }
 
 @Composable
-private fun StatusChip(poucoUsada: Boolean, venceHoje: Boolean) {
+private fun StatusChip(isHistorico: Boolean, poucoUsada: Boolean, venceHoje: Boolean) {
     val (text, bg, fg) = when {
+        isHistorico -> Triple("Inativa", SurfaceVariant, OnSurfaceVariant)
         venceHoje  -> Triple("● Vence hoje", ErrorContainer, Error)
         poucoUsada -> Triple("⚠ Pouco usada", SecondaryContainer, Secondary)
         else       -> Triple("● Ativa", SuccessContainer, Success)
@@ -209,4 +258,3 @@ private fun UsageProgressBar(progress: Float, poucoUsada: Boolean) {
         )
     }
 }
-

@@ -3,6 +3,7 @@ package br.com.payflowapplication.di
 import android.content.Context
 import androidx.room.Room
 import br.com.payflowapplication.data.db.AssinaturaDao
+import br.com.payflowapplication.data.db.HistoryDao
 import br.com.payflowapplication.data.db.PayFlowDatabase
 import dagger.Module
 import dagger.Provides
@@ -25,5 +26,8 @@ object DatabaseModule {
     @Provides
     fun provideAssinaturaDao(database: PayFlowDatabase): AssinaturaDao =
         database.assinaturaDao()
-}
 
+    @Provides
+    fun provideHistoryDao(database: PayFlowDatabase): HistoryDao =
+        database.historyDao()
+}

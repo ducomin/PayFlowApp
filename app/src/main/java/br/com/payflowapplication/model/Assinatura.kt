@@ -2,6 +2,7 @@ package br.com.payflowapplication.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import java.time.LocalDate
 
 enum class Modalidade { MENSAL, ANUAL }
 
@@ -24,7 +25,10 @@ data class Assinatura(
     val modalidade: Modalidade,
     val diaVencimento: Int,          // 1..31
     val categoria: CategoriaAssinatura,
-    val urlServico: String = "",
-    val ativa: Boolean = true
-)
+    val urlServico: String? = "",
+    val ativa: Boolean = true,
 
+    // Campos adicionados para o histórico
+    val dataInicio: LocalDate? = null,
+    val dataFim: LocalDate? = null
+)

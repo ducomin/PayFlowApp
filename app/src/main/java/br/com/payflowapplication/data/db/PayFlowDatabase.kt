@@ -5,9 +5,9 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import br.com.payflowapplication.model.Assinatura
 
-@Database(entities = [Assinatura::class], version = 1, exportSchema = false)
+@Database(entities = [Assinatura::class], version = 3, exportSchema = false)
 @TypeConverters(Converters::class)
 abstract class PayFlowDatabase : RoomDatabase() {
     abstract fun assinaturaDao(): AssinaturaDao
+    abstract fun historyDao(): HistoryDao
 }
-
