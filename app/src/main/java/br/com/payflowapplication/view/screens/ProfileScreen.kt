@@ -263,33 +263,6 @@ fun ProfileScreen(
                             Column(
                                 modifier = Modifier.padding(vertical = 8.dp)
                             ) {
-
-                                ProfileOptionItem(
-                                    icon = {
-                                        Icon(
-                                            Icons.Default.Person,
-                                            contentDescription = null
-                                        )
-                                    },
-                                    title = "Conta",
-                                    subtitle = "Editar informações pessoais"
-                                )
-
-                                HorizontalDivider()
-
-                                ProfileOptionItem(
-                                    icon = {
-                                        Icon(
-                                            Icons.Default.Lock,
-                                            contentDescription = null
-                                        )
-                                    },
-                                    title = "Privacidade e segurança",
-                                    subtitle = "Senha, biometria e proteção"
-                                )
-
-                                HorizontalDivider()
-
                                 ProfileOptionItem(
                                     icon = {
                                         Icon(
