@@ -213,6 +213,7 @@ private fun categoryColor(categoria: CategoriaAssinatura): Color = when (categor
     CategoriaAssinatura.SAUDE       -> Color(0xFF00BCD4)
     CategoriaAssinatura.FINANCAS    -> Color(0xFF7B1FA2)
     CategoriaAssinatura.OUTROS      -> Color(0xFF607D8B)
+    CategoriaAssinatura.NONE        -> Color.Gray // Adicione esta linha
 }
 
 @Composable
