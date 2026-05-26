@@ -23,7 +23,7 @@ interface AssinaturaDao {
      */
     @Query(
         "SELECT * FROM assinaturas " +
-        "WHERE LOWER(nomeServico) = LOWER(:nome) " +
+        "WHERE LOWER(nomeServico) = LOWER(:nome) AND  ativa = 1" +
         "AND id != :excludeId " +
         "LIMIT 1"
     )

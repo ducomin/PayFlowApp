@@ -1,5 +1,7 @@
 package br.com.payflowapplication.viewmodels
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -7,6 +9,7 @@ import br.com.payflowapplication.model.Assinatura
 import br.com.payflowapplication.model.CategoriaAssinatura
 import br.com.payflowapplication.model.Modalidade
 import br.com.payflowapplication.model.Streaming
+import java.time.LocalDate
 import br.com.payflowapplication.data.repository.AssinaturaRepository
 import br.com.payflowapplication.data.repository.StreamingRepository
 import br.com.payflowapplication.view.components.CurrencyVisualTransformation
@@ -27,6 +30,7 @@ data class CadastroAssinaturaUiState(
     val diaVencimento: String = "",
     val categoria: CategoriaAssinatura? = null,
     val urlServico: String = "",
+    val dataInicio: LocalDate? = null,
     val nomeError: String? = null,
     val valorError: String? = null,
     val vencimentoError: String? = null,
@@ -76,6 +80,7 @@ class CadastroAssinaturaViewModel @Inject constructor(
                         diaVencimento = assinatura.diaVencimento.toString(),
                         categoria = assinatura.categoria,
                         urlServico = assinatura.urlServico ?: "",
+                        dataInicio = assinatura.dataInicio,
                         isEditMode = true,
                         hasUnsavedChanges = false
                     )
@@ -163,6 +168,7 @@ class CadastroAssinaturaViewModel @Inject constructor(
 
     // ── Save ──────────────────────────────────────────────────────────────────
 
+    @RequiresApi(Build.VERSION_CODES.O)
     fun salvar() {
         viewModelScope.launch {
             // Step 1 — sync format validation
@@ -188,7 +194,8 @@ class CadastroAssinaturaViewModel @Inject constructor(
                 modalidade = state.modalidade,
                 diaVencimento = state.diaVencimento.toInt(),
                 categoria = state.categoria!!,
-                urlServico = state.urlServico.trim()
+                urlServico = state.urlServico.trim(),
+                dataInicio = state.dataInicio ?: LocalDate.now()
             )
             repository.save(assinatura)
             _uiState.update { it.copy(isSaving = false, savedSuccessfully = true, hasUnsavedChanges = false) }

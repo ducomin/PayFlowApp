@@ -30,6 +30,6 @@ data class Assinatura(
     val ativa: Boolean = true,
 
     // Campos adicionados para o histórico
-    val dataInicio: LocalDate? = null,
+    val dataInicio: LocalDate,
     val dataFim: LocalDate? = null
 )
