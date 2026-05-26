@@ -9,9 +9,12 @@ import androidx.navigation.navArgument
 import br.com.payflowapplication.view.screens.CadastroAssinaturaScreen
 import br.com.payflowapplication.view.screens.HistoryScreen
 import br.com.payflowapplication.view.screens.HomeDashboardScreen
+import br.com.payflowapplication.view.screens.ProfileScreen
 
 @Composable
-fun PayFlowNavGraph(startDestination: String = Routes.HOME) {
+fun PayFlowNavGraph(darkTheme: Boolean,
+                    onThemeChange: (Boolean) -> Unit,
+                    startDestination: String = Routes.HOME) {
     val navController = rememberNavController()
 
     NavHost(navController = navController, startDestination = startDestination) {
@@ -21,6 +24,7 @@ fun PayFlowNavGraph(startDestination: String = Routes.HOME) {
             HomeDashboardScreen(
                 onNovaAssinatura = { navController.navigate(Routes.CADASTRO_ASSINATURA) },
                 onAssinaturaClick = { id -> navController.navigate(Routes.editRoute(id)) },
+                onPerfilClick = { navController.navigate(Routes.PERFIL)},
                 onNavigateToHistory = { navController.navigate(Routes.HISTORICO) }
             )
         }
@@ -48,6 +52,16 @@ fun PayFlowNavGraph(startDestination: String = Routes.HOME) {
             CadastroAssinaturaScreen(
                 onNavigateBack = { navController.popBackStack() },
                 onSalvoComSucesso = { navController.popBackStack() }
+            )
+        }
+
+        // ── Profile ───────────────────────────────────────────────────────────
+        composable(Routes.PERFIL) {
+            ProfileScreen(
+                onNavigateBack = { navController.popBackStack() },
+                onLogoutClick = { navController.popBackStack() },
+                darkTheme = darkTheme,
+                onThemeChange = onThemeChange
             )
         }
     }
