@@ -167,8 +167,6 @@ class CadastroAssinaturaViewModel @Inject constructor(
         _uiState.update { it.copy(urlServico = value, urlError = null, hasUnsavedChanges = true) }
 
     // ── Save ──────────────────────────────────────────────────────────────────
-
-    @RequiresApi(Build.VERSION_CODES.O)
     fun salvar() {
         viewModelScope.launch {
             // Step 1 — sync format validation
