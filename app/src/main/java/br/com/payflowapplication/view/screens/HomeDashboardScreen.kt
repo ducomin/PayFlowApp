@@ -31,10 +31,20 @@ fun HomeDashboardScreen(
     onNovaAssinatura: () -> Unit,
     onAssinaturaClick: (Long) -> Unit,
     onPerfilClick: () -> Unit,
+    onNavigateToHistory: () -> Unit,
     viewModel: HomeDashboardViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     var selectedTab by remember { mutableStateOf(NavTab.HOME) }
+
+    // Handle navigation from BottomBar
+    LaunchedEffect(selectedTab) {
+        if (selectedTab == NavTab.HISTORICO) {
+            onNavigateToHistory()
+            // Reset tab to home to avoid re-triggering navigation on config change
+            selectedTab = NavTab.HOME
+        }
+    }
 
     Scaffold(
         topBar = {
@@ -281,6 +291,7 @@ private fun SuccessContent(
                 LowUsageBanner(
                     count = state.totalPoucoUsadas,
                     valorMensal = state.valorPoucoUsadas,
+                    assinaturas = state.assinaturasPoucoUsadas,
                     modifier = Modifier.padding(vertical = 8.dp)
                 )
             }
