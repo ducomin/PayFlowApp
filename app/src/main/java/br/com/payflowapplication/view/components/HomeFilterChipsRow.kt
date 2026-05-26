@@ -57,5 +57,5 @@ private fun categoryEmoji(cat: CategoriaAssinatura): String = when (cat) {
     CategoriaAssinatura.SAUDE        -> "🏥"
     CategoriaAssinatura.FINANCAS     -> "💰"
     CategoriaAssinatura.OUTROS       -> "📦"
+    CategoriaAssinatura.NONE         -> "" // Handle the NONE case
 }
-

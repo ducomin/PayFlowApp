@@ -7,6 +7,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import br.com.payflowapplication.view.screens.CadastroAssinaturaScreen
+import br.com.payflowapplication.view.screens.HistoryScreen
 import br.com.payflowapplication.view.screens.HomeDashboardScreen
 
 @Composable
@@ -19,7 +20,15 @@ fun PayFlowNavGraph(startDestination: String = Routes.HOME) {
         composable(Routes.HOME) {
             HomeDashboardScreen(
                 onNovaAssinatura = { navController.navigate(Routes.CADASTRO_ASSINATURA) },
-                onAssinaturaClick = { id -> navController.navigate(Routes.editRoute(id)) }
+                onAssinaturaClick = { id -> navController.navigate(Routes.editRoute(id)) },
+                onNavigateToHistory = { navController.navigate(Routes.HISTORICO) }
+            )
+        }
+
+        // ── History ────────────────────────────────────────────────────────────
+        composable(Routes.HISTORICO) {
+            HistoryScreen(
+                onNavigateBack = { navController.popBackStack() }
             )
         }
 
@@ -43,4 +52,3 @@ fun PayFlowNavGraph(startDestination: String = Routes.HOME) {
         }
     }
 }
-

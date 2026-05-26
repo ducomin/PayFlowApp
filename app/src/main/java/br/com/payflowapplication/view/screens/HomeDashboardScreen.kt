@@ -30,10 +30,20 @@ import br.com.payflowapplication.viewmodels.HomeDashboardViewModel
 fun HomeDashboardScreen(
     onNovaAssinatura: () -> Unit,
     onAssinaturaClick: (Long) -> Unit,
+    onNavigateToHistory: () -> Unit,
     viewModel: HomeDashboardViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     var selectedTab by remember { mutableStateOf(NavTab.HOME) }
+
+    // Handle navigation from BottomBar
+    LaunchedEffect(selectedTab) {
+        if (selectedTab == NavTab.HISTORICO) {
+            onNavigateToHistory()
+            // Reset tab to home to avoid re-triggering navigation on config change
+            selectedTab = NavTab.HOME
+        }
+    }
 
     Scaffold(
         topBar = {

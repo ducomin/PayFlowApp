@@ -75,7 +75,7 @@ class CadastroAssinaturaViewModel @Inject constructor(
                         modalidade = assinatura.modalidade,
                         diaVencimento = assinatura.diaVencimento.toString(),
                         categoria = assinatura.categoria,
-                        urlServico = assinatura.urlServico,
+                        urlServico = assinatura.urlServico ?: "",
                         isEditMode = true,
                         hasUnsavedChanges = false
                     )
