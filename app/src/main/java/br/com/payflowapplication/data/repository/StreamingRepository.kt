@@ -2,6 +2,7 @@ package br.com.payflowapplication.data.repository
 
 import br.com.payflowapplication.data.remote.StreamingApiService
 import br.com.payflowapplication.model.ConsumoMensal
+import br.com.payflowapplication.model.Pagamento
 import br.com.payflowapplication.model.Streaming
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -54,6 +55,15 @@ class StreamingRepository @Inject constructor(
         )
     } catch (e: Exception) {
         LOW_USAGE_FALLBACK
+    }
+
+    /**
+     * Fetches payment history for [nomeServico].
+     */
+    suspend fun getPagamentos(nomeServico: String): List<Pagamento> = try {
+        api.getPagamentos(nomeServico.trim().lowercase())
+    } catch (e: Exception) {
+        emptyList()
     }
 }
 
