@@ -431,5 +431,117 @@
       "dias_utilizados": 12,
       "total_minutos_mes": 720
     }
+  ],
+  "notificacoes": [
+    {
+      "id": 1,
+      "titulo": "Vencimento em 2 dias",
+      "descricao": "Netflix vence no dia 29. Verifique o pagamento.",
+      "tipo": "VENCIMENTO",
+      "lida": false,
+      "criadaEm": "2026-05-27T09:00:00",
+      "assinaturaId": 1,
+      "username": "user1"
+    },
+    {
+      "id": 2,
+      "titulo": "Vencimento amanhã",
+      "descricao": "Spotify vence amanhã. Certifique-se de que o saldo está disponível.",
+      "tipo": "VENCIMENTO",
+      "lida": false,
+      "criadaEm": "2026-05-27T07:30:00",
+      "assinaturaId": 2,
+      "username": "user1"
+    },
+    {
+      "id": 3,
+      "titulo": "Baixo uso detectado",
+      "descricao": "Disney+ teve apenas 3 dias de uso esse mês. Considere pausar ou cancelar.",
+      "tipo": "BAIXO_USO",
+      "lida": false,
+      "criadaEm": "2026-05-27T06:00:00",
+      "assinaturaId": 3,
+      "username": "user1"
+    },
+    {
+      "id": 4,
+      "titulo": "Promoção disponível",
+      "descricao": "HBO Max com 30% de desconto por upgrade para plano familiar. Válido até fim do mês.",
+      "tipo": "PROMOCAO",
+      "lida": false,
+      "criadaEm": "2026-05-26T14:00:00",
+      "assinaturaId": 4,
+      "username": "user1"
+    },
+    {
+      "id": 5,
+      "titulo": "Renovação confirmada",
+      "descricao": "Amazon Prime Video renovado com sucesso por R$14,90.",
+      "tipo": "RENOVACAO",
+      "lida": true,
+      "criadaEm": "2026-05-25T10:00:00",
+      "assinaturaId": 5,
+      "username": "user1"
+    },
+    {
+      "id": 6,
+      "titulo": "Baixo uso detectado",
+      "descricao": "Apple TV+ não foi acessado nos últimos 15 dias. Considere cancelar.",
+      "tipo": "BAIXO_USO",
+      "lida": true,
+      "criadaEm": "2026-05-24T08:00:00",
+      "assinaturaId": 6,
+      "username": "user1"
+    },
+    {
+      "id": 7,
+      "titulo": "Renovação confirmada",
+      "descricao": "Globoplay renovado com sucesso por R$24,90.",
+      "tipo": "RENOVACAO",
+      "lida": true,
+      "criadaEm": "2026-05-22T11:00:00",
+      "assinaturaId": 7,
+      "username": "user1"
+    },
+    {
+      "id": 8,
+      "titulo": "Promoção disponível",
+      "descricao": "Paramount+ com plano anual por R$99,90. Economia de R$119,88 no ano.",
+      "tipo": "PROMOCAO",
+      "lida": true,
+      "criadaEm": "2026-05-21T16:00:00",
+      "assinaturaId": 8,
+      "username": "user1"
+    },
+    {
+      "id": 9,
+      "titulo": "Vencimento em 3 dias",
+      "descricao": "Crunchyroll vence no dia 30. Renovação automática habilitada.",
+      "tipo": "VENCIMENTO",
+      "lida": false,
+      "criadaEm": "2026-05-27T08:00:00",
+      "assinaturaId": 9,
+      "username": "user2"
+    },
+    {
+      "id": 10,
+      "titulo": "Baixo uso detectado",
+      "descricao": "Paramount+ — somente 2 dias assistidos este mês.",
+      "tipo": "BAIXO_USO",
+      "lida": false,
+      "criadaEm": "2026-05-26T10:00:00",
+      "assinaturaId": 10,
+      "username": "user2"
+    },
+    {
+      "id": 11,
+      "titulo": "Renovação confirmada",
+      "descricao": "Netflix renovado com sucesso por R$55,90.",
+      "tipo": "RENOVACAO",
+      "lida": false,
+      "criadaEm": "2026-05-25T09:00:00",
+      "assinaturaId": 1,
+      "username": "user2"
+    }
   ]
 }

@@ -3,9 +3,11 @@ package br.com.payflowapplication.viewmodels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import br.com.payflowapplication.data.repository.AssinaturaRepository
+import br.com.payflowapplication.data.repository.NotificacaoRepository
 import br.com.payflowapplication.data.repository.StreamingRepository
 import br.com.payflowapplication.model.Assinatura
 import br.com.payflowapplication.model.CategoriaAssinatura
+import br.com.payflowapplication.model.ConsumoMensal
 import br.com.payflowapplication.model.Modalidade
 import br.com.payflowapplication.view.components.AssinaturaUso
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -13,10 +15,12 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.util.Calendar
@@ -60,7 +64,11 @@ data class AssinaturaUiItem(
 class HomeDashboardViewModel @Inject constructor(
     private val assinaturaRepository: AssinaturaRepository,
     private val streamingRepository: StreamingRepository,
+    private val notificacaoRepository: NotificacaoRepository,
 ) : ViewModel() {
+
+    // Usuário logado — em produção viria de AuthRepository/PrefsRepository
+    private val username = "user1"
 
     private val _queryBusca     = MutableStateFlow("")
     private val _categoriaFiltro = MutableStateFlow<CategoriaAssinatura?>(null)
@@ -68,11 +76,16 @@ class HomeDashboardViewModel @Inject constructor(
     private val _uiState = MutableStateFlow<HomeDashboardUiState>(HomeDashboardUiState.Loading)
     val uiState: StateFlow<HomeDashboardUiState> = _uiState.asStateFlow()
 
+    /** Contagem reativa de notificações não lidas — exposta para o badge da NavBar */
+    val avisosNaoLidos: StateFlow<Int> = notificacaoRepository
+        .contarNaoLidas(username)
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), 0)
+
     /**
-     * In-session cache: key = "nomeServico:anomes" (lowercase), value = usage 0..1.
+     * In-session cache: key = "nomeServico:anomes" (lowercase), value = ConsumoMensal.
      * Avoids hitting the API again for the same service within the same session.
      */
-    private val usageCache = mutableMapOf<String, Float>()
+    private val usageCache = mutableMapOf<String, ConsumoMensal>()
 
     init {
         viewModelScope.launch {
@@ -116,12 +129,13 @@ class HomeDashboardViewModel @Inject constructor(
         val mesLabel = currentMesLabel(cal)
 
         // ── Fetch usage for all subscriptions in parallel ─────────────────────
-        val usages: Map<Long, Float> = fetchUsagesParallel(lista, anomes)
+        val usages: Map<Long, ConsumoMensal> = fetchUsagesParallel(lista, anomes)
 
         // ── Build enriched items ──────────────────────────────────────────────
         val todosItens = lista.map { ass ->
-            val usage     = usages[ass.id] ?: 0f
-            val poucoUsada = usage < BAIXO_USO_THRESHOLD
+            val consumo   = usages[ass.id]
+            val usage     = consumo?.usageScore ?: 1f   // unknown → not flagged
+            val poucoUsada = consumo != null && usage < BAIXO_USO_THRESHOLD
             val venceHoje  = ass.diaVencimento == todayDay
             AssinaturaUiItem(
                 assinatura     = ass,
@@ -147,11 +161,10 @@ class HomeDashboardViewModel @Inject constructor(
                 item.assinatura.valor
         }
         // Build AssinaturaUso list for the banner chart
-        // usage (0..1) * 30 → approximate days used this month
         val assinaturasPoucoUsadas = poucoUsadasList.map { item ->
             AssinaturaUso(
                 nome     = item.assinatura.nomeServico,
-                diasUso  = (item.usage * 30).toInt(),
+                diasUso  = usages[item.assinatura.id]?.diasUtilizados ?: (item.usage * 30).toInt(),
                 valorMes = if (item.assinatura.modalidade == Modalidade.ANUAL)
                                item.assinatura.valor / 12.0
                            else
@@ -184,16 +197,16 @@ class HomeDashboardViewModel @Inject constructor(
     }
 
     /**
-     * Fetches usage scores from the API for every [Assinatura] in parallel.
+     * Fetches usage data from the API for every [Assinatura] in parallel.
      * Results are stored in [usageCache] keyed by "nome:anomes" to prevent
      * redundant calls when the list or filters change within the same session.
      *
-     * Returns a map of assinatura.id → usage (0..1).
+     * Returns a map of assinatura.id → ConsumoMensal.
      */
     private suspend fun fetchUsagesParallel(
         lista: List<Assinatura>,
         anomes: String,
-    ): Map<Long, Float> = coroutineScope {
+    ): Map<Long, ConsumoMensal> = coroutineScope {
         lista.map { ass ->
             async {
                 val cacheKey = "${ass.nomeServico.lowercase().trim()}:$anomes"
@@ -205,9 +218,8 @@ class HomeDashboardViewModel @Inject constructor(
                         nomeServico = ass.nomeServico,
                         anomes      = anomes,
                     )
-                    val score = consumo.usageScore
-                    usageCache[cacheKey] = score
-                    ass.id to score
+                    usageCache[cacheKey] = consumo
+                    ass.id to consumo
                 }
             }
         }.awaitAll().toMap()

@@ -1,7 +1,8 @@
 {
   "type": "module",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "restart": "taskkill /F /IM node.exe 2>nul & node server.js"
   },
   "dependencies": {
     "@tinyhttp/app": "^3.0.7",

@@ -9,6 +9,7 @@ import androidx.navigation.navArgument
 import br.com.payflowapplication.view.screens.CadastroAssinaturaScreen
 import br.com.payflowapplication.view.screens.HistoryScreen
 import br.com.payflowapplication.view.screens.HomeDashboardScreen
+import br.com.payflowapplication.view.screens.NotificacoesScreen
 import br.com.payflowapplication.view.screens.ProfileScreen
 
 @Composable
@@ -25,7 +26,8 @@ fun PayFlowNavGraph(darkTheme: Boolean,
                 onNovaAssinatura = { navController.navigate(Routes.CADASTRO_ASSINATURA) },
                 onAssinaturaClick = { id -> navController.navigate(Routes.editRoute(id)) },
                 onPerfilClick = { navController.navigate(Routes.PERFIL)},
-                onNavigateToHistory = { navController.navigate(Routes.HISTORICO) }
+                onNavigateToHistory = { navController.navigate(Routes.HISTORICO) },
+                onNavigateToNotificacoes = { navController.navigate(Routes.NOTIFICACOES) }
             )
         }
 
@@ -62,6 +64,20 @@ fun PayFlowNavGraph(darkTheme: Boolean,
                 onLogoutClick = { navController.popBackStack() },
                 darkTheme = darkTheme,
                 onThemeChange = onThemeChange
+            )
+        }
+
+        // ── Notificações ─────────────────────────────────────────────────────
+        composable(Routes.NOTIFICACOES) {
+            NotificacoesScreen(
+                onNavigateBack = { navController.popBackStack() },
+                onNavigateToHome = {
+                    navController.navigate(Routes.HOME) {
+                        popUpTo(Routes.HOME) { inclusive = true }
+                    }
+                },
+                onNavigateToHistory = { navController.navigate(Routes.HISTORICO) },
+                onNavigateToPerfil = { navController.navigate(Routes.PERFIL) }
             )
         }
     }

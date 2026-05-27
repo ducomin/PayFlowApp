@@ -14,4 +14,7 @@ object Routes {
 
     // Perfil
     const val PERFIL = "perfil"
+
+    // Notificações / Avisos
+    const val NOTIFICACOES = "notificacoes"
 }

@@ -32,17 +32,29 @@ fun HomeDashboardScreen(
     onAssinaturaClick: (Long) -> Unit,
     onPerfilClick: () -> Unit,
     onNavigateToHistory: () -> Unit,
+    onNavigateToNotificacoes: () -> Unit = {},
     viewModel: HomeDashboardViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val avisosNaoLidos by viewModel.avisosNaoLidos.collectAsStateWithLifecycle()
     var selectedTab by remember { mutableStateOf(NavTab.HOME) }
 
     // Handle navigation from BottomBar
     LaunchedEffect(selectedTab) {
-        if (selectedTab == NavTab.HISTORICO) {
-            onNavigateToHistory()
-            // Reset tab to home to avoid re-triggering navigation on config change
-            selectedTab = NavTab.HOME
+        when (selectedTab) {
+            NavTab.HISTORICO -> {
+                onNavigateToHistory()
+                selectedTab = NavTab.HOME
+            }
+            NavTab.AVISOS -> {
+                onNavigateToNotificacoes()
+                selectedTab = NavTab.HOME
+            }
+            NavTab.PERFIL -> {
+                onPerfilClick()
+                selectedTab = NavTab.HOME
+            }
+            else -> Unit
         }
     }
 
@@ -95,9 +107,7 @@ fun HomeDashboardScreen(
             PayFlowNavBar(
                 selected = selectedTab,
                 onSelect = { selectedTab = it },
-                avisosBadge = if (uiState is HomeDashboardUiState.Success)
-                    (uiState as HomeDashboardUiState.Success).totalVenceHoje
-                else 0
+                avisosBadge = avisosNaoLidos
             )
         },
         floatingActionButton = {

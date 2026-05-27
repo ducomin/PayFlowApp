@@ -5,7 +5,7 @@ import { cors } from '@tinyhttp/cors'
 
 // ── Load DB ───────────────────────────────────────────────────────────────────
 const adapter = new JSONFile('db.json')
-const db = new Low(adapter, { streamings: [], consumo_mensal: [] })
+const db = new Low(adapter, { streamings: [], consumo_mensal: [], notificacoes: [] })
 await db.read()
 
 // ── App ───────────────────────────────────────────────��───────────────────────
@@ -13,11 +13,30 @@ const app = new App()
 
 app.use(cors())
 
+// ── Helpers ───────────────────────────────────────────────────────────────────
+/**
+ * Normaliza nomes de serviço para comparação tolerante.
+ * Estratégia: remove TUDO que não seja letra ou dígito, converte para lowercase.
+ * "Claro TV+"  → "clarotv"
+ * "claro tv+"  → "clarotv"
+ * "claro%20tv%2B" chega decodificado como "claro tv+" → "clarotv"
+ * "Disney+"    → "disney"
+ * "Amazon Prime Video" → "amazonprimevideo"
+ * Isso garante match independente de espaços, pontuação, +, -, etc.
+ */
+function normalizarNome(nome) {
+  return nome
+    .toLowerCase()
+    .replace(/[^a-z0-9]/g, '') // mantém só letras e dígitos
+}
+
 // ── GET /api/v1/streamings/search?nome=<query> ────────────────────────────────
 app.get('/api/v1/streamings/search', (req, res) => {
-  const query = (req.query['nome'] ?? '').toString().toLowerCase().trim()
+  const query = normalizarNome((req.query['nome'] ?? '').toString())
   const all = db.data.streamings ?? []
-  const results = query ? all.filter(s => s.nome.toLowerCase().includes(query)) : all
+  const results = query
+    ? all.filter(s => normalizarNome(s.nome).includes(query))
+    : all
   res.json(results)
 })
 
@@ -35,7 +54,7 @@ app.get('/api/v1/streamings/search', (req, res) => {
 // ─────────────────────────────────────────────────────────────────────────────
 app.get('/api/v1/streamings/:username/consumo_mensal', (req, res) => {
   const username = (req.params['username'] ?? '').toString().toLowerCase().trim()
-  const nome     = (req.query['nome']   ?? '').toString().toLowerCase().trim()
+  const nome     = normalizarNome((req.query['nome']   ?? '').toString())
   const anomes   = (req.query['anomes'] ?? '').toString().trim()
 
   // Validate required params
@@ -48,14 +67,13 @@ app.get('/api/v1/streamings/:username/consumo_mensal', (req, res) => {
 
   // Calculate total days in the requested month
   const [year, month] = anomes.split('-').map(Number)
-  const totalDias = new Date(year, month, 0).getDate()  // day 0 of next month = last day of current
+  const totalDias = new Date(year, month, 0).getDate()
 
   const consumos = db.data.consumo_mensal ?? []
 
-  // Look for an exact record: nome (case-insensitive) + mes_referencia
-  // username "*" means "shared / any user" — acts as a wildcard seed
+  // Compara usando nomes normalizados para tolerar "tv+", "tv plus", "%2B" etc.
   const registro = consumos.find(c =>
-    c.nome === nome &&
+    normalizarNome(c.nome) === nome &&
     c.mes_referencia === anomes &&
     (c.username === '*' || c.username === username)
   )
@@ -64,6 +82,10 @@ app.get('/api/v1/streamings/:username/consumo_mensal', (req, res) => {
     return res.json({
       id:               registro.streaming_id,
       username:         username === '*' ? username : username,
+      streaming:        {
+        id: registro.streaming_id,
+        nome: registro.nome,
+      },
       mes_referencia:   registro.mes_referencia,
       total_dias_no_mes: registro.total_dias_no_mes,
       dias_utilizados:  registro.dias_utilizados,
@@ -88,13 +110,48 @@ app.get('/api/v1/streamings', (_req, res) => {
   res.json(db.data.streamings ?? [])
 })
 
+// ── GET /api/v1/notificacoes/:username ────────────────────────────────────────
+// Retorna todas as notificações do usuário, ordenadas por criadaEm DESC
+app.get('/api/v1/notificacoes/:username', (req, res) => {
+  const username = (req.params['username'] ?? '').toString().toLowerCase().trim()
+  const todas = db.data.notificacoes ?? []
+  const resultado = todas
+    .filter(n => n.username === username)
+    .sort((a, b) => new Date(b.criadaEm) - new Date(a.criadaEm))
+  res.json(resultado)
+})
+
+// ── PATCH /api/v1/notificacoes/:id/lida ──────────────────────────────────────
+// Marca uma notificação como lida
+app.patch('/api/v1/notificacoes/:id/lida', async (req, res) => {
+  const id = parseInt(req.params['id'], 10)
+  const notif = (db.data.notificacoes ?? []).find(n => n.id === id)
+  if (!notif) return res.status(404).json({ error: 'Notificação não encontrada.' })
+  notif.lida = true
+  await db.write()
+  res.json(notif)
+})
+
+// ── PATCH /api/v1/notificacoes/:username/ler-todas ───────────────────────────
+// Marca todas as notificações do usuário como lidas
+app.patch('/api/v1/notificacoes/:username/ler-todas', async (req, res) => {
+  const username = (req.params['username'] ?? '').toString().toLowerCase().trim()
+  const todas = db.data.notificacoes ?? []
+  todas.filter(n => n.username === username).forEach(n => { n.lida = true })
+  await db.write()
+  res.json({ updated: todas.filter(n => n.username === username).length })
+})
+
 // ── Start ─────────────────────────────────────────────────────────────────────
 const PORT = 3000
 const HOST = '0.0.0.0'
 
 app.listen(PORT, () => {
   console.log('\n  Mock API rodando!\n')
-  console.log(`  GET http://localhost:${PORT}/api/v1/streamings`)
-  console.log(`  GET http://localhost:${PORT}/api/v1/streamings/search?nome=%s`)
-  console.log(`  GET http://localhost:${PORT}/api/v1/streamings/:username/consumo_mensal?nome=%s&anomes=%s\n`)
+  console.log(`  GET   http://localhost:${PORT}/api/v1/streamings`)
+  console.log(`  GET   http://localhost:${PORT}/api/v1/streamings/search?nome=%s`)
+  console.log(`  GET   http://localhost:${PORT}/api/v1/streamings/:username/consumo_mensal?nome=%s&anomes=%s`)
+  console.log(`  GET   http://localhost:${PORT}/api/v1/notificacoes/:username`)
+  console.log(`  PATCH http://localhost:${PORT}/api/v1/notificacoes/:id/lida`)
+  console.log(`  PATCH http://localhost:${PORT}/api/v1/notificacoes/:username/ler-todas\n`)
 }, HOST)

@@ -7,6 +7,7 @@ import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
 import br.com.payflowapplication.data.db.AssinaturaDao
 import br.com.payflowapplication.data.db.HistoryDao
+import br.com.payflowapplication.data.db.NotificacaoDao
 import br.com.payflowapplication.data.db.PayFlowDatabase
 import dagger.Module
 import dagger.Provides
@@ -64,4 +65,8 @@ object DatabaseModule {
     @Provides
     fun provideHistoryDao(database: PayFlowDatabase): HistoryDao =
         database.historyDao()
+
+    @Provides
+    fun provideNotificacaoDao(database: PayFlowDatabase): NotificacaoDao =
+        database.notificacaoDao()
 }

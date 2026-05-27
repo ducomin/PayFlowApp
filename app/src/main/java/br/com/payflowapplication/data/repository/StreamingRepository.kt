@@ -6,14 +6,18 @@ import br.com.payflowapplication.model.Streaming
 import javax.inject.Inject
 import javax.inject.Singleton
 
-/** Fallback returned when the API call fails or network is unavailable. */
-private val LOW_USAGE_FALLBACK = ConsumoMensal(
+/**
+ * Fallback returned when the API call fails or network is unavailable.
+ * Uses diasUtilizados == totalDiasNoMes so usageScore = 1.0 (neutral/unknown),
+ * preventing false "pouco usada" flags when data is simply unavailable.
+ */
+private val UNKNOWN_USAGE_FALLBACK = ConsumoMensal(
     id = null,
     username = "",
     mesReferencia = "",
     totalDiasNoMes = 30,
-    diasUtilizados = 3,   // ≈ 10% → "pouco usada"
-    totalMinutosMes = 60,
+    diasUtilizados = 30,  // 100% → score=1.0 → never flagged as "pouco usada"
+    totalMinutosMes = 0,
 )
 
 @Singleton
@@ -53,8 +57,6 @@ class StreamingRepository @Inject constructor(
             anomes   = anomes,
         )
     } catch (e: Exception) {
-        LOW_USAGE_FALLBACK
+        UNKNOWN_USAGE_FALLBACK
     }
 }
-
-
