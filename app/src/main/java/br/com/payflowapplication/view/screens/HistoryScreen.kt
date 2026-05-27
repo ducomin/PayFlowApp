@@ -4,28 +4,24 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -41,14 +37,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import br.com.payflowapplication.model.Assinatura
 import br.com.payflowapplication.model.CategoriaAssinatura
 import br.com.payflowapplication.view.components.AssinaturaCard
 import br.com.payflowapplication.viewmodels.HistorySortOption
 import br.com.payflowapplication.viewmodels.HistoryViewModel
-import java.time.format.DateTimeFormatter
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -88,7 +82,7 @@ fun HistoryScreen(
                 .padding(paddingValues)
                 .padding(horizontal = 16.dp)
         ) {
-            CategoryFilterChips(
+            CategoryDropdownFilter(
                 selectedCategory = uiState.selectedCategory,
                 onCategorySelected = viewModel::onCategoryFilterChange
             )
@@ -113,26 +107,44 @@ fun HistoryScreen(
 }
 
 @Composable
-fun CategoryFilterChips(
+fun CategoryDropdownFilter(
     selectedCategory: CategoriaAssinatura?,
-    onCategorySelected: (CategoriaAssinatura) -> Unit
+    onCategorySelected: (CategoriaAssinatura?) -> Unit
 ) {
-    val categories = CategoriaAssinatura.values().filter { it != CategoriaAssinatura.NONE }
-    LazyRow(
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
-        contentPadding = PaddingValues(vertical = 8.dp)
-    ) {
-        items(categories) { category ->
-            FilterChip(
-                selected = selectedCategory == category,
-                onClick = { onCategorySelected(category) },
-                label = { Text(category.label) },
-                leadingIcon = if (selectedCategory == category) {
-                    { Icon(imageVector = Icons.Default.Check, contentDescription = null) }
-                } else {
-                    null
+    var expanded by remember { mutableStateOf(false) }
+    val categories = CategoriaAssinatura.values()
+
+    Box(modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)) {
+        OutlinedButton(
+            onClick = { expanded = true },
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text(selectedCategory?.label ?: "Todas as categorias")
+            Spacer(modifier = Modifier.weight(1f))
+            Icon(Icons.Default.ArrowDropDown, contentDescription = "Abrir filtro de categoria")
+        }
+
+        DropdownMenu(
+            expanded = expanded,
+            onDismissRequest = { expanded = false },
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            DropdownMenuItem(
+                text = { Text("Todas as categorias") },
+                onClick = {
+                    onCategorySelected(null)
+                    expanded = false
                 }
             )
+            categories.forEach { category ->
+                DropdownMenuItem(
+                    text = { Text(category.label) },
+                    onClick = {
+                        onCategorySelected(category)
+                        expanded = false
+                    }
+                )
+            }
         }
     }
 }

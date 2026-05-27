@@ -72,7 +72,7 @@ class HistoryViewModel @Inject constructor(
     )
 
     fun onCategoryFilterChange(category: CategoriaAssinatura?) {
-        _selectedCategory.value = if (_selectedCategory.value == category) null else category
+        _selectedCategory.value = category
     }
 
     fun onSortOptionChange(sortOption: HistorySortOption) {
