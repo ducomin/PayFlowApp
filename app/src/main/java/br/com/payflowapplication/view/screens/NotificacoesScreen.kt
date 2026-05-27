@@ -33,7 +33,6 @@ fun NotificacoesScreen(
     onNavigateBack: () -> Unit,
     onNavigateToHome: () -> Unit,
     onNavigateToHistory: () -> Unit,
-    onNavigateToPerfil: () -> Unit,
     viewModel: NotificacoesViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -52,10 +51,9 @@ fun NotificacoesScreen(
                 selected = NavTab.AVISOS,
                 onSelect = { tab ->
                     when (tab) {
-                        NavTab.HOME -> onNavigateToHome()
+                        NavTab.HOME      -> onNavigateToHome()
                         NavTab.HISTORICO -> onNavigateToHistory()
-                        NavTab.PERFIL -> onNavigateToPerfil()
-                        NavTab.AVISOS -> Unit
+                        NavTab.AVISOS    -> Unit
                     }
                 },
                 avisosBadge = uiState.naoLidas

@@ -11,7 +11,7 @@ import androidx.compose.ui.unit.dp
 import br.com.payflowapplication.ui.theme.*
 
 /** Active bottom navigation tab */
-enum class NavTab { HOME, HISTORICO, AVISOS, PERFIL }
+enum class NavTab { HISTORICO, HOME, AVISOS }
 
 /**
  * MD3 NavigationBar with pill indicator on active item and badge support on AVISOS.
@@ -61,17 +61,15 @@ fun PayFlowNavBar(
 }
 
 private fun tabLabel(tab: NavTab) = when (tab) {
-    NavTab.HOME      -> "Home"
     NavTab.HISTORICO -> "Histórico"
+    NavTab.HOME      -> "Home"
     NavTab.AVISOS    -> "Avisos"
-    NavTab.PERFIL    -> "Perfil"
 }
 
 private fun tabIcon(tab: NavTab): ImageVector = when (tab) {
-    NavTab.HOME      -> Icons.Default.Home
     NavTab.HISTORICO -> Icons.AutoMirrored.Filled.List
+    NavTab.HOME      -> Icons.Default.Home
     NavTab.AVISOS    -> Icons.Default.Notifications
-    NavTab.PERFIL    -> Icons.Default.Person
 }
 
 

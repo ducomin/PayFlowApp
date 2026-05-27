@@ -50,10 +50,6 @@ fun HomeDashboardScreen(
                 onNavigateToNotificacoes()
                 selectedTab = NavTab.HOME
             }
-            NavTab.PERFIL -> {
-                onPerfilClick()
-                selectedTab = NavTab.HOME
-            }
             else -> Unit
         }
     }

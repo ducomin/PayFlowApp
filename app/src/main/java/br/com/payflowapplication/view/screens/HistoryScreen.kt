@@ -54,67 +54,36 @@ fun HistoryScreen(
     val uiState by viewModel.uiState.collectAsState()
 
     Scaffold(
-
-        containerColor =
-            MaterialTheme.colorScheme.background,
-
+        containerColor = MaterialTheme.colorScheme.background,
         topBar = {
-
             CenterAlignedTopAppBar(
-
                 title = {
-
                     Text(
                         text = "Histórico",
-                        color =
-                            MaterialTheme
-                                .colorScheme
-                                .onSurface
+                        color = MaterialTheme.colorScheme.onSurface
                     )
                 },
-
                 navigationIcon = {
-
                     IconButton(
                         onClick = onNavigateBack
                     ) {
-
                         Icon(
-                            imageVector =
-                                Icons.AutoMirrored
-                                    .Filled
-                                    .ArrowBack,
-
-                            contentDescription =
-                                "Voltar",
-
-                            tint =
-                                MaterialTheme
-                                    .colorScheme
-                                    .onSurface
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "Voltar",
+                            tint =MaterialTheme .colorScheme.onSurface
                         )
                     }
                 },
-
                 actions = {
-
                     SortMenu(
-                        selectedOption =
-                            uiState.sortOption,
-
-                        onOptionSelected =
-                            viewModel::onSortOptionChange
+                        selectedOption = uiState.sortOption,
+                        onOptionSelected = viewModel::onSortOptionChange
                     )
                 },
-
                 colors =
                     TopAppBarDefaults
                         .centerAlignedTopAppBarColors(
-
-                            containerColor =
-                                MaterialTheme
-                                    .colorScheme
-                                    .surfaceContainer
+                            containerColor = MaterialTheme.colorScheme.surfaceContainer
                         )
             )
         }
@@ -122,33 +91,23 @@ fun HistoryScreen(
     ) { paddingValues ->
 
         Column(
-
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
                 .padding(horizontal = 16.dp)
 
         ) {
-
             CategoryDropdownFilter(
-
-                selectedCategory =
-                    uiState.selectedCategory,
-
-                onCategorySelected =
-                    viewModel::onCategoryFilterChange
+                selectedCategory = uiState.selectedCategory,
+                onCategorySelected = viewModel::onCategoryFilterChange
             )
-
             when {
 
                 uiState.isLoading -> {
 
                     Box(
-                        modifier =
-                            Modifier.fillMaxSize(),
-
-                        contentAlignment =
-                            Alignment.Center
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
                     ) {
 
                         CircularProgressIndicator(
