@@ -14,8 +14,7 @@ enum class CategoriaAssinatura(val label: String) {
     EDUCACAO("Educação"),
     SAUDE("Saúde"),
     FINANCAS("Finanças"),
-    OUTROS("Outros"),
-    NONE("None") // Adicionado para representar a ausência de seleção
+    OUTROS("Outros")
 }
 
 @Entity(tableName = "assinaturas")
