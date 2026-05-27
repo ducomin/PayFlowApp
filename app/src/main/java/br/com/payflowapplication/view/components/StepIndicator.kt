@@ -9,9 +9,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
-import br.com.payflowapplication.ui.theme.OnSurfaceVariant
-import br.com.payflowapplication.ui.theme.Primary
-import br.com.payflowapplication.ui.theme.SurfaceVariant
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Component: Step Indicator (N bars, filled = primary, empty = surfaceVariant)

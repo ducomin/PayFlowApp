@@ -30,7 +30,6 @@ sealed interface ProfileUiState {
         val totalAtivas: Int,
         val totalCategorias: Int,
         val totalMensal: Double,
-        val darkModeEnabled: Boolean,
         val assinaturas: List<Assinatura>,
     ) : ProfileUiState
 }
@@ -59,20 +58,14 @@ class ProfileViewModel @Inject constructor(
 
             assinaturaRepository.getAtivas()
                 .catch { e ->
-
                     _uiState.value = ProfileUiState.Error(
                         e.message ?: "Erro ao carregar perfil"
                     )
                 }
                 .collectLatest { assinaturas ->
 
-                    val totalMensal = assinaturas.sumOf {
-                        it.valor
-                    }
-
-                    val categorias = assinaturas
-                        .map { it.categoria }
-                        .distinct()
+                    val totalMensal = assinaturas.sumOf { it.valor }
+                    val categorias = assinaturas.map { it.categoria }.distinct()
 
                     _uiState.value = ProfileUiState.Success(
                         nomeUsuario = "Usuário Silva",
@@ -81,24 +74,9 @@ class ProfileViewModel @Inject constructor(
                         totalAtivas = assinaturas.size,
                         totalCategorias = categorias.size,
                         totalMensal = totalMensal,
-                        darkModeEnabled = true,
                         assinaturas = assinaturas
                     )
                 }
-        }
-    }
-
-    // ─── Theme toggle ───────────────────────────────────────────────────────
-
-    fun onDarkModeChange(enabled: Boolean) {
-
-        val currentState = _uiState.value
-
-        if (currentState is ProfileUiState.Success) {
-
-            _uiState.value = currentState.copy(
-                darkModeEnabled = enabled
-            )
         }
     }
 }

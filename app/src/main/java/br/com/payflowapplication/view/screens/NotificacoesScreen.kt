@@ -21,7 +21,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import br.com.payflowapplication.model.Notificacao
-import br.com.payflowapplication.ui.theme.*
 import br.com.payflowapplication.view.components.NavTab
 import br.com.payflowapplication.view.components.NotificacaoCard
 import br.com.payflowapplication.view.components.PayFlowNavBar
@@ -62,7 +61,7 @@ fun NotificacoesScreen(
                 avisosBadge = uiState.naoLidas
             )
         },
-        containerColor = Background
+        containerColor = MaterialTheme.colorScheme.background
     ) { paddingValues ->
         Box(
             modifier = Modifier
@@ -97,7 +96,7 @@ private fun NotificacoesTopBar(
                 Icon(
                     Icons.AutoMirrored.Filled.ArrowBack,
                     contentDescription = "Voltar",
-                    tint = OnSurfaceVariant
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
         },
@@ -110,20 +109,20 @@ private fun NotificacoesTopBar(
                     text = "Avisos",
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold,
-                    color = OnSurface
+                    color = MaterialTheme.colorScheme.onSurface
                 )
                 AnimatedVisibility(visible = naoLidas > 0) {
                     Box(
                         modifier = Modifier
                             .clip(RoundedCornerShape(12.dp))
-                            .background(Error)
+                            .background(MaterialTheme.colorScheme.error)
                             .padding(horizontal = 8.dp, vertical = 2.dp),
                         contentAlignment = Alignment.Center
                     ) {
                         Text(
                             text = if (naoLidas > 99) "99+" else naoLidas.toString(),
                             style = MaterialTheme.typography.labelSmall,
-                            color = OnError,
+                            color = MaterialTheme.colorScheme.onError,
                             fontWeight = FontWeight.Bold
                         )
                     }
@@ -136,13 +135,13 @@ private fun NotificacoesTopBar(
                     Text(
                         text = "Ler todas",
                         style = MaterialTheme.typography.labelLarge,
-                        color = Primary
+                        color = MaterialTheme.colorScheme.primary
                     )
                 }
             }
         },
         colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = SurfaceContainerLow
+            containerColor = MaterialTheme.colorScheme.surfaceContainerLow
         )
     )
 }
@@ -160,7 +159,6 @@ private fun NotificacoesContent(
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         grupos.forEach { grupo ->
-            // Filtra apenas os não lidos (lidos já foram removidos do banco/estado)
             val naoLidos = grupo.itens.filter { !it.lida }
             if (naoLidos.isEmpty()) return@forEach
 
@@ -172,7 +170,6 @@ private fun NotificacoesContent(
                 items = naoLidos,
                 key = { it.id }
             ) { notif ->
-                // AnimatedVisibility controla a saída animada do item
                 AnimatedVisibility(
                     visible = notif.id !in removendo,
                     enter = fadeIn() + expandVertically(),
@@ -205,23 +202,23 @@ private fun SectionHeader(titulo: String, count: Int) {
             text = titulo,
             style = MaterialTheme.typography.labelLarge,
             fontWeight = FontWeight.SemiBold,
-            color = OnSurfaceVariant
+            color = MaterialTheme.colorScheme.onSurfaceVariant
         )
         Box(
             modifier = Modifier
                 .clip(RoundedCornerShape(8.dp))
-                .background(SurfaceContainerHigh)
+                .background(MaterialTheme.colorScheme.surfaceContainerHigh)
                 .padding(horizontal = 6.dp, vertical = 2.dp)
         ) {
             Text(
                 text = count.toString(),
                 style = MaterialTheme.typography.labelSmall,
-                color = OnSurfaceVariant
+                color = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
         HorizontalDivider(
             modifier = Modifier.weight(1f),
-            color = OutlineVariant
+            color = MaterialTheme.colorScheme.outlineVariant
         )
     }
 }
@@ -240,20 +237,20 @@ private fun EstadoVazioContent() {
             imageVector = Icons.Default.Notifications,
             contentDescription = null,
             modifier = Modifier.size(72.dp),
-            tint = OnSurfaceVariant.copy(alpha = 0.4f)
+            tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f)
         )
         Spacer(Modifier.height(16.dp))
         Text(
             text = "Nenhum aviso no momento",
             style = MaterialTheme.typography.titleMedium,
-            color = OnSurface,
+            color = MaterialTheme.colorScheme.onSurface,
             textAlign = TextAlign.Center
         )
         Spacer(Modifier.height(8.dp))
         Text(
             text = "Você será notificado sobre vencimentos, promoções e uso das suas assinaturas.",
             style = MaterialTheme.typography.bodyMedium,
-            color = OnSurfaceVariant,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
             textAlign = TextAlign.Center
         )
     }
@@ -263,7 +260,7 @@ private fun EstadoVazioContent() {
 @Composable
 private fun LoadingContent() {
     Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        CircularProgressIndicator(color = Primary)
+        CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
     }
 }
 
@@ -280,13 +277,13 @@ private fun ErroContent(mensagem: String) {
         Text(
             text = "Erro ao carregar avisos",
             style = MaterialTheme.typography.titleMedium,
-            color = Error
+            color = MaterialTheme.colorScheme.error
         )
         Spacer(Modifier.height(8.dp))
         Text(
             text = mensagem,
             style = MaterialTheme.typography.bodySmall,
-            color = OnSurfaceVariant,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
             textAlign = TextAlign.Center
         )
     }

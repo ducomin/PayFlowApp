@@ -3,6 +3,7 @@ package br.com.payflowapplication.view.components
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
@@ -149,9 +150,10 @@ fun AssinaturaCard(
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                     val usagePct = (usage * 100).toInt()
+                    val successColor = if (isSystemInDarkTheme()) Success else LightSuccess
                     val usageColor = when {
                         poucoUsada -> MaterialTheme.colorScheme.secondary
-                        usagePct >= 70 -> Success
+                        usagePct >= 70 -> successColor
                         else -> MaterialTheme.colorScheme.primary
                     }
                     Text(
@@ -223,11 +225,19 @@ private fun categoryColor(categoria: CategoriaAssinatura): Color = when (categor
 
 @Composable
 private fun StatusChip(isHistorico: Boolean, poucoUsada: Boolean, venceHoje: Boolean) {
+    val isDark = isSystemInDarkTheme()
+
+    // Cores de Success respondem ao tema:
+    //   Dark  → fundo SuccessContainer (#005225) + texto Success (#6DD58C) verde claro
+    //   Light → fundo LightSuccess (#2E7D32)     + texto branco (#FFFFFF)
+    val successBg = if (isDark) SuccessContainer else LightSuccess
+    val successFg = if (isDark) Success          else LightOnSuccess
+
     val (text, bg, fg) = when {
-        isHistorico -> Triple("Inativa", MaterialTheme.colorScheme.surfaceVariant, MaterialTheme.colorScheme.onSurfaceVariant)
-        venceHoje  -> Triple("● Vence hoje", MaterialTheme.colorScheme.errorContainer, MaterialTheme.colorScheme.error)
-        poucoUsada -> Triple("⚠ Pouco usada", MaterialTheme.colorScheme.secondaryContainer, MaterialTheme.colorScheme.secondary)
-        else       -> Triple("● Ativa", SuccessContainer, Success)
+        isHistorico -> Triple("Inativa",      MaterialTheme.colorScheme.surfaceVariant,    MaterialTheme.colorScheme.onSurfaceVariant)
+        venceHoje   -> Triple("● Vence hoje", MaterialTheme.colorScheme.errorContainer,    MaterialTheme.colorScheme.error)
+        poucoUsada  -> Triple("⚠ Pouco usada", MaterialTheme.colorScheme.secondaryContainer, MaterialTheme.colorScheme.secondary)
+        else        -> Triple("● Ativa",      successBg,                                  successFg)
     }
     Box(
         modifier = Modifier
@@ -235,18 +245,23 @@ private fun StatusChip(isHistorico: Boolean, poucoUsada: Boolean, venceHoje: Boo
             .background(bg)
             .padding(horizontal = 10.dp, vertical = 3.dp)
     ) {
-        Text(text = text, style = MaterialTheme.typography.labelSmall, color = fg,
-            fontWeight = FontWeight.Medium)
+        Text(
+            text = text,
+            style = MaterialTheme.typography.labelSmall,
+            color = fg,
+            fontWeight = FontWeight.Medium
+        )
     }
 }
 
 @Composable
 private fun UsageProgressBar(progress: Float, poucoUsada: Boolean) {
     val trackColor = MaterialTheme.colorScheme.surfaceVariant
+    val successColor = if (isSystemInDarkTheme()) Success else LightSuccess
     val fillColor = when {
-        poucoUsada   -> MaterialTheme.colorScheme.secondary
-        progress >= 0.7f -> Success
-        else         -> MaterialTheme.colorScheme.primary
+        poucoUsada       -> MaterialTheme.colorScheme.secondary
+        progress >= 0.7f -> successColor
+        else             -> MaterialTheme.colorScheme.primary
     }
     Box(
         modifier = Modifier

@@ -3,6 +3,7 @@ package br.com.payflowapplication.view.components
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -39,7 +40,7 @@ fun NotificacaoCard(
     val config = notificacaoConfig(notificacao.tipo)
 
     val containerColor by animateColorAsState(
-        targetValue = if (notificacao.lida) SurfaceContainer else config.containerColor,
+        targetValue = if (notificacao.lida) MaterialTheme.colorScheme.surfaceContainer else config.containerColor,
         label = "notif_bg"
     )
     val contentAlpha = if (notificacao.lida) 0.6f else 1f
@@ -83,7 +84,11 @@ fun NotificacaoCard(
                         text = notificacao.titulo,
                         style = MaterialTheme.typography.titleSmall,
                         fontWeight = if (notificacao.lida) FontWeight.Normal else FontWeight.SemiBold,
-                        color = OnSurface.copy(alpha = contentAlpha),
+                        // onContainerColor harmoniza com o tint do fundo do card
+                        color = if (notificacao.lida)
+                            MaterialTheme.colorScheme.onSurface.copy(alpha = contentAlpha)
+                        else
+                            config.onContainerColor.copy(alpha = contentAlpha),
                         modifier = Modifier.weight(1f),
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
@@ -97,7 +102,11 @@ fun NotificacaoCard(
                 Text(
                     text = notificacao.descricao,
                     style = MaterialTheme.typography.bodySmall,
-                    color = OnSurfaceVariant.copy(alpha = contentAlpha),
+                    // descrição levemente mais suave: onContainerColor com alpha reduzido
+                    color = if (notificacao.lida)
+                        MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = contentAlpha)
+                    else
+                        config.onContainerColor.copy(alpha = 0.8f),
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis
                 )
@@ -112,7 +121,10 @@ fun NotificacaoCard(
                     Text(
                         text = formatarData(notificacao.criadaEm),
                         style = MaterialTheme.typography.labelSmall,
-                        color = OnSurfaceVariant.copy(alpha = 0.7f)
+                        color = if (notificacao.lida)
+                            MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
+                        else
+                            config.onContainerColor.copy(alpha = 0.6f)
                     )
                     if (!notificacao.lida) {
                         Box(
@@ -154,44 +166,57 @@ private data class NotifConfig(
     val iconTint: Color,
     val iconBackground: Color,
     val containerColor: Color,
+    // Cor do texto principal dentro do card — usa o token "onContainer" do tipo,
+    // garantindo que título e descrição harmonizem com o tint do fundo do card.
+    val onContainerColor: Color,
     val label: String,
     val contentDesc: String
 )
 
 @Composable
-private fun notificacaoConfig(tipo: TipoNotificacao) = when (tipo) {
-    TipoNotificacao.VENCIMENTO -> NotifConfig(
-        icon = Icons.Default.Warning,
-        iconTint = Error,
-        iconBackground = ErrorContainer.copy(alpha = 0.6f),
-        containerColor = ErrorContainer.copy(alpha = 0.25f),
-        label = "Vencimento",
-        contentDesc = "Alerta de vencimento"
-    )
-    TipoNotificacao.BAIXO_USO -> NotifConfig(
-        icon = Icons.Default.Info,
-        iconTint = Secondary,
-        iconBackground = SecondaryContainer.copy(alpha = 0.6f),
-        containerColor = SecondaryContainer.copy(alpha = 0.25f),
-        label = "Baixo uso",
-        contentDesc = "Alerta de baixo uso"
-    )
-    TipoNotificacao.PROMOCAO -> NotifConfig(
-        icon = Icons.Default.Star,
-        iconTint = Tertiary,
-        iconBackground = TertiaryContainer.copy(alpha = 0.6f),
-        containerColor = TertiaryContainer.copy(alpha = 0.25f),
-        label = "Promoção",
-        contentDesc = "Promoção disponível"
-    )
-    TipoNotificacao.RENOVACAO -> NotifConfig(
-        icon = Icons.Default.CheckCircle,
-        iconTint = Success,
-        iconBackground = SuccessContainer.copy(alpha = 0.6f),
-        containerColor = SuccessContainer.copy(alpha = 0.25f),
-        label = "Renovação",
-        contentDesc = "Renovação confirmada"
-    )
+private fun notificacaoConfig(tipo: TipoNotificacao): NotifConfig {
+    val isDark = isSystemInDarkTheme()
+    // Dark  → containerColor com alpha 0.25 (o fundo escuro base já é visível)
+    // Light → containerColor SEM alpha (usa a cor plena do container token) para
+    //         que o fundo do card fique com o mesmo tint forte do ícone/borda.
+    return when (tipo) {
+        TipoNotificacao.VENCIMENTO -> NotifConfig(
+            icon             = Icons.Default.Warning,
+            iconTint         = if (isDark) Error                    else LightError,
+            iconBackground   = if (isDark) ErrorContainer           else LightErrorContainer,
+            containerColor   = if (isDark) ErrorContainer.copy(alpha = 0.25f) else LightErrorContainer,
+            onContainerColor = if (isDark) OnErrorContainer         else LightOnErrorContainer,
+            label            = "Vencimento",
+            contentDesc      = "Alerta de vencimento"
+        )
+        TipoNotificacao.BAIXO_USO -> NotifConfig(
+            icon             = Icons.Default.Info,
+            iconTint         = if (isDark) Secondary                else LightSecondary,
+            iconBackground   = if (isDark) SecondaryContainer       else LightSecondaryContainer,
+            containerColor   = if (isDark) SecondaryContainer.copy(alpha = 0.25f) else LightSecondaryContainer,
+            onContainerColor = if (isDark) OnSecondaryContainer     else LightOnSecondaryContainer,
+            label            = "Baixo uso",
+            contentDesc      = "Alerta de baixo uso"
+        )
+        TipoNotificacao.PROMOCAO -> NotifConfig(
+            icon             = Icons.Default.Star,
+            iconTint         = if (isDark) Tertiary                 else LightTertiary,
+            iconBackground   = if (isDark) TertiaryContainer        else LightTertiaryContainer,
+            containerColor   = if (isDark) TertiaryContainer.copy(alpha = 0.25f) else LightTertiaryContainer,
+            onContainerColor = if (isDark) OnTertiaryContainer      else LightOnTertiaryContainer,
+            label            = "Promoção",
+            contentDesc      = "Promoção disponível"
+        )
+        TipoNotificacao.RENOVACAO -> NotifConfig(
+            icon             = Icons.Default.CheckCircle,
+            iconTint         = if (isDark) Success                  else LightSuccess,
+            iconBackground   = if (isDark) SuccessContainer         else LightSuccessContainer,
+            containerColor   = if (isDark) SuccessContainer.copy(alpha = 0.25f) else LightSuccessContainer,
+            onContainerColor = if (isDark) OnSuccess                else LightOnSuccessContainer,
+            label            = "Renovação",
+            contentDesc      = "Renovação confirmada"
+        )
+    }
 }
 
 // ─── Formatação de data ────────────────────────────────────────────────────

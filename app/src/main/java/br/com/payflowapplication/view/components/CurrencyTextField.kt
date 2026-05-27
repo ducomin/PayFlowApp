@@ -16,12 +16,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import br.com.payflowapplication.ui.theme.Error
-import br.com.payflowapplication.ui.theme.OnSurface
-import br.com.payflowapplication.ui.theme.OnSurfaceVariant
-import br.com.payflowapplication.ui.theme.Outline
-import br.com.payflowapplication.ui.theme.Primary
-import br.com.payflowapplication.ui.theme.SurfaceContainerHighest
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Component: Campo de moeda brasileira (BRL)

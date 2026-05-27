@@ -77,6 +77,9 @@ dependencies {
     // Coroutines
     implementation(libs.kotlinx.coroutines.android)
 
+    // DataStore — persistência de preferências (tema, etc.)
+    implementation(libs.androidx.datastore.preferences)
+
     // Retrofit + OkHttp
     implementation(libs.retrofit)
     implementation(libs.retrofit.converter.gson)

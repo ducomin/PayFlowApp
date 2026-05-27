@@ -7,6 +7,7 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -183,7 +184,8 @@ fun LowUsageChartModal(
                     Text(
                         text = "💡 Considere cancelar assinaturas com 0–3 dias de uso.",
                         style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.secondary.copy(alpha = 0.9f),
+                        // secondary já é tema-aware: dark=#FFD54F / light=#755B00
+                        color = MaterialTheme.colorScheme.secondary,
                     )
                 }
             }
@@ -211,11 +213,28 @@ private fun BarRow(
         label = "bar-${item.nome}",
     )
 
+    val isDark = isSystemInDarkTheme()
+
+    // Cores de barra respondem ao tema:
+    //   Dark  → tokens claros (legíveis em fundo escuro)
+    //   Light → tokens escuros (legíveis em fundo claro)
     val barColor = when {
-        item.diasUso == 0  -> Error
-        item.diasUso <= 5  -> Secondary
-        else               -> Primary
+        item.diasUso == 0 -> if (isDark) Error          else LightError      // vermelho
+        item.diasUso <= 5 -> if (isDark) Secondary       else LightSecondary  // amarelo/âmbar
+        else              -> if (isDark) Primary         else LightPrimary    // teal
     }
+
+    // Texto do nome: usa o token semântico do tema, não hardcoded do dark
+    val nameColor = MaterialTheme.colorScheme.onSurface
+
+    // Track da barra: usa o token semântico do tema
+    val trackColor = MaterialTheme.colorScheme.surfaceContainerHighest
+
+    // Texto do valor dentro da barra
+    val barLabelColor = if (animFraction > 0.3f)
+        MaterialTheme.colorScheme.onSurface
+    else
+        MaterialTheme.colorScheme.onSurfaceVariant
 
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -224,7 +243,7 @@ private fun BarRow(
         Text(
             text = item.nome,
             style = MaterialTheme.typography.bodySmall,
-            color = OnSurface,
+            color = nameColor,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
             modifier = Modifier.width(NAME_COL_WIDTH),
@@ -235,7 +254,7 @@ private fun BarRow(
                 .weight(1f)
                 .height(22.dp)
                 .clip(RoundedCornerShape(4.dp))
-                .background(SurfaceContainerHighest),
+                .background(trackColor),
         ) {
             if (animFraction > 0f) {
                 Box(
@@ -249,7 +268,7 @@ private fun BarRow(
             Text(
                 text = "${item.diasUso}d",
                 style = MaterialTheme.typography.labelSmall,
-                color = if (animFraction > 0.3f) OnSurface else OnSurfaceVariant,
+                color = barLabelColor,
                 modifier = Modifier
                     .align(Alignment.CenterStart)
                     .padding(start = 6.dp),
