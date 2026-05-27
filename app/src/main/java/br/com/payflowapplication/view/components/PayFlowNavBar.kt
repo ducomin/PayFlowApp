@@ -25,7 +25,7 @@ fun PayFlowNavBar(
 ) {
     NavigationBar(
         modifier = modifier,
-        containerColor = SurfaceContainer,
+        containerColor = MaterialTheme.colorScheme.surfaceContainer,
         tonalElevation = 0.dp
     ) {
         NavTab.entries.forEach { tab ->
@@ -49,11 +49,11 @@ fun PayFlowNavBar(
                 },
                 label = { Text(tabLabel(tab)) },
                 colors = NavigationBarItemDefaults.colors(
-                    selectedIconColor = OnSecondaryContainer,
-                    selectedTextColor = OnSurface,
-                    indicatorColor = SecondaryContainer,
-                    unselectedIconColor = OnSurfaceVariant,
-                    unselectedTextColor = OnSurfaceVariant,
+                    selectedIconColor = MaterialTheme.colorScheme.onSecondaryContainer,
+                    selectedTextColor = MaterialTheme.colorScheme.onSurface,
+                    indicatorColor = MaterialTheme.colorScheme.secondaryContainer,
+                    unselectedIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                    unselectedTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
             )
         }

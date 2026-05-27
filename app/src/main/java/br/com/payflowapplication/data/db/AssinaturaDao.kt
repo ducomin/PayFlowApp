@@ -16,6 +16,9 @@ interface AssinaturaDao {
     @Query("SELECT * FROM assinaturas WHERE id = :id")
     suspend fun getById(id: Long): Assinatura?
 
+    @Query("SELECT * FROM assinaturas WHERE id = :id")
+    fun getByIdFlow(id: Long): Flow<Assinatura?>
+
     /**
      * Checks for a duplicate name (case-insensitive).
      * [excludeId] should be the current record id in edit mode (pass 0L for new records).

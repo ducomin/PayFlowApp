@@ -7,6 +7,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import br.com.payflowapplication.view.screens.CadastroAssinaturaScreen
+import br.com.payflowapplication.view.screens.DetalheScreen
 import br.com.payflowapplication.view.screens.HistoryScreen
 import br.com.payflowapplication.view.screens.HomeDashboardScreen
 import br.com.payflowapplication.view.screens.NotificacoesScreen
@@ -24,7 +25,7 @@ fun PayFlowNavGraph(darkTheme: Boolean,
         composable(Routes.HOME) {
             HomeDashboardScreen(
                 onNovaAssinatura = { navController.navigate(Routes.CADASTRO_ASSINATURA) },
-                onAssinaturaClick = { id -> navController.navigate(Routes.editRoute(id)) },
+                onAssinaturaClick = { id -> navController.navigate(Routes.detalheRoute(id)) },
                 onPerfilClick = { navController.navigate(Routes.PERFIL)},
                 onNavigateToHistory = { navController.navigate(Routes.HISTORICO) },
                 onNavigateToNotificacoes = { navController.navigate(Routes.NOTIFICACOES) }
@@ -64,6 +65,17 @@ fun PayFlowNavGraph(darkTheme: Boolean,
                 onLogoutClick = { navController.popBackStack() },
                 darkTheme = darkTheme,
                 onThemeChange = onThemeChange
+            )
+        }
+
+        // ── Detail ────────────────────────────────────────
+        composable(
+            route = Routes.DETALHE_ASSINATURA,
+            arguments = listOf(navArgument("assinaturaId") { type = NavType.LongType })
+        ) {
+            DetalheScreen(
+                onEditClick = { id -> navController.navigate(Routes.editRoute(id)) },
+                onNavigateBack = { navController.popBackStack() }
             )
         }
 

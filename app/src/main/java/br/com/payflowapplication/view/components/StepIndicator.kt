@@ -30,7 +30,13 @@ fun StepIndicator(currentStep: Int, totalSteps: Int) {
                         .weight(1f)
                         .height(4.dp)
                         .clip(CircleShape)
-                        .background(if (filled) Primary else SurfaceVariant)
+                        .background(
+                            if (filled) {
+                                MaterialTheme.colorScheme.primary
+                            } else {
+                                MaterialTheme.colorScheme.surfaceVariant
+                            }
+                        )
                 )
             }
         }
@@ -38,7 +44,7 @@ fun StepIndicator(currentStep: Int, totalSteps: Int) {
         Text(
             text = "Passo $currentStep de $totalSteps",
             style = MaterialTheme.typography.labelSmall,
-            color = OnSurfaceVariant
+            color = MaterialTheme.colorScheme.onSurfaceVariant
         )
     }
 }

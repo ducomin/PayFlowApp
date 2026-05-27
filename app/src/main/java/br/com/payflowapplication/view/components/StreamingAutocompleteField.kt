@@ -64,7 +64,11 @@ fun StreamingAutocompleteField(
             text = label,
             style = MaterialTheme.typography.labelSmall,
             fontWeight = FontWeight.Medium,
-            color = if (isError) Error else Primary,
+            color = if (isError) {
+                MaterialTheme.colorScheme.error
+            } else {
+                MaterialTheme.colorScheme.primary
+            },
             modifier = Modifier.padding(start = 16.dp, bottom = 4.dp)
         )
 
@@ -76,14 +80,14 @@ fun StreamingAutocompleteField(
                 Text(
                     text = "Ex: Netflix, Spotify…",
                     style = MaterialTheme.typography.bodyLarge,
-                    color = OnSurfaceVariant
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             },
             leadingIcon = {
                 Icon(
                     imageVector = Icons.Default.Search,
                     contentDescription = null,
-                    tint = OnSurfaceVariant
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             },
             trailingIcon = {
@@ -91,7 +95,7 @@ fun StreamingAutocompleteField(
                     isLoading -> CircularProgressIndicator(
                         modifier = Modifier.size(20.dp),
                         strokeWidth = 2.dp,
-                        color = Primary
+                        color = MaterialTheme.colorScheme.primary
                     )
                     value.isNotEmpty() -> IconButton(onClick = {
                         onValueChange("")
@@ -100,7 +104,7 @@ fun StreamingAutocompleteField(
                         Icon(
                             imageVector = Icons.Default.Close,
                             contentDescription = "Limpar",
-                            tint = OnSurfaceVariant
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
                 }
@@ -109,16 +113,16 @@ fun StreamingAutocompleteField(
             singleLine = true,
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
             colors = TextFieldDefaults.colors(
-                focusedContainerColor = SurfaceContainerHighest,
-                unfocusedContainerColor = SurfaceContainerHighest,
-                errorContainerColor = SurfaceContainerHighest,
-                focusedTextColor = OnSurface,
-                unfocusedTextColor = OnSurface,
-                focusedIndicatorColor = Primary,
-                unfocusedIndicatorColor = Outline,
-                errorIndicatorColor = Error,
-                cursorColor = Primary,
-                errorCursorColor = Error
+                focusedContainerColor = MaterialTheme.colorScheme.surfaceContainerHighest,
+                unfocusedContainerColor = MaterialTheme.colorScheme.surfaceContainerHighest,
+                errorContainerColor = MaterialTheme.colorScheme.surfaceContainerHighest,
+                focusedTextColor = MaterialTheme.colorScheme.onSurface,
+                unfocusedTextColor = MaterialTheme.colorScheme.onSurface,
+                focusedIndicatorColor = MaterialTheme.colorScheme.primary,
+                unfocusedIndicatorColor = MaterialTheme.colorScheme.outline,
+                errorIndicatorColor = MaterialTheme.colorScheme.error,
+                cursorColor = MaterialTheme.colorScheme.primary,
+                errorCursorColor = MaterialTheme.colorScheme.error
             ),
             shape = RoundedCornerShape(
                 topStart = 4.dp, topEnd = 4.dp,
@@ -138,7 +142,7 @@ fun StreamingAutocompleteField(
             Card(
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(bottomStart = 8.dp, bottomEnd = 8.dp),
-                colors = CardDefaults.cardColors(containerColor = SurfaceContainerHigh),
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerHigh),
                 elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
             ) {
                 suggestions.forEachIndexed { index, streaming ->
@@ -177,21 +181,21 @@ private fun StreamingSuggestionItem(
             Text(
                 text = streaming.nome,
                 style = MaterialTheme.typography.bodyLarge,
-                color = OnSurface,
+                color = MaterialTheme.colorScheme.onSurface,
                 fontWeight = FontWeight.Medium
             )
             Spacer(Modifier.height(2.dp))
             Text(
                 text = streaming.categoriaPrincipal,
                 style = MaterialTheme.typography.bodySmall,
-                color = OnSurfaceVariant
+                color = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
         Spacer(Modifier.width(8.dp))
         Text(
             text = "↵",
             style = MaterialTheme.typography.bodySmall,
-            color = OnSurfaceVariant
+            color = MaterialTheme.colorScheme.onSurfaceVariant
         )
     }
 }

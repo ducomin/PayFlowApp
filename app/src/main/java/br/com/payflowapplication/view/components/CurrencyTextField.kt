@@ -47,64 +47,189 @@ fun CurrencyTextField(
     modifier: Modifier = Modifier,
     errorMessage: String? = null
 ) {
+
     val isError = errorMessage != null
     val transformation = CurrencyVisualTransformation()
 
-    Column(modifier = modifier.fillMaxWidth()) {
+    Column(
+        modifier = modifier.fillMaxWidth()
+    ) {
+
         Text(
             text = label,
-            style = MaterialTheme.typography.labelSmall,
-            fontWeight = FontWeight.Medium,
-            color = if (isError) Error else Primary,
-            modifier = Modifier.padding(start = 16.dp, bottom = 4.dp)
+
+            style =
+                MaterialTheme.typography.labelSmall,
+
+            fontWeight =
+                FontWeight.Medium,
+
+            color =
+                if (isError)
+                    MaterialTheme.colorScheme.error
+                else
+                    MaterialTheme.colorScheme.primary,
+
+            modifier =
+                Modifier.padding(
+                    start = 16.dp,
+                    bottom = 4.dp
+                )
         )
+
         TextField(
+
             value = digits,
+
             onValueChange = { raw ->
-                // Aceita apenas dígitos; remove zeros à esquerda; limita 13 chars (R$ 99.999.999,99)
-                val cleaned = raw.filter { it.isDigit() }.trimStart('0').take(13)
+
+                // Aceita apenas dígitos; remove zeros à esquerda;
+                // limita 13 chars (R$ 99.999.999,99)
+
+                val cleaned =
+                    raw.filter { it.isDigit() }
+                        .trimStart('0')
+                        .take(13)
+
                 onDigitsChange(cleaned)
             },
-            visualTransformation = transformation,
+
+            visualTransformation =
+                transformation,
+
             prefix = {
+
                 Text(
                     text = "R$ ",
-                    color = OnSurfaceVariant,
-                    style = MaterialTheme.typography.bodyLarge
+
+                    color =
+                        MaterialTheme
+                            .colorScheme
+                            .onSurfaceVariant,
+
+                    style =
+                        MaterialTheme
+                            .typography
+                            .bodyLarge
                 )
             },
+
             placeholder = {
+
                 Text(
                     text = "0,00",
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = OnSurfaceVariant
+
+                    style =
+                        MaterialTheme
+                            .typography
+                            .bodyLarge,
+
+                    color =
+                        MaterialTheme
+                            .colorScheme
+                            .onSurfaceVariant
                 )
             },
+
             isError = isError,
             singleLine = true,
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.NumberPassword),
+
+            keyboardOptions =
+                KeyboardOptions(
+                    keyboardType =
+                        KeyboardType.NumberPassword
+                ),
+
             colors = TextFieldDefaults.colors(
-                focusedContainerColor = SurfaceContainerHighest,
-                unfocusedContainerColor = SurfaceContainerHighest,
-                errorContainerColor = SurfaceContainerHighest,
-                focusedTextColor = OnSurface,
-                unfocusedTextColor = OnSurface,
-                focusedIndicatorColor = Primary,
-                unfocusedIndicatorColor = Outline,
-                errorIndicatorColor = Error,
-                cursorColor = Primary,
-                errorCursorColor = Error,
-                focusedLabelColor = Primary,
-                unfocusedLabelColor = OnSurfaceVariant,
-                errorLabelColor = Error
+
+                focusedContainerColor =
+                    MaterialTheme
+                        .colorScheme
+                        .surfaceContainerHighest,
+
+                unfocusedContainerColor =
+                    MaterialTheme
+                        .colorScheme
+                        .surfaceContainerHighest,
+
+                errorContainerColor =
+                    MaterialTheme
+                        .colorScheme
+                        .surfaceContainerHighest,
+
+                focusedTextColor =
+                    MaterialTheme
+                        .colorScheme
+                        .onSurface,
+
+                unfocusedTextColor =
+                    MaterialTheme
+                        .colorScheme
+                        .onSurface,
+
+                focusedIndicatorColor =
+                    MaterialTheme
+                        .colorScheme
+                        .primary,
+
+                unfocusedIndicatorColor =
+                    MaterialTheme
+                        .colorScheme
+                        .outline,
+
+                errorIndicatorColor =
+                    MaterialTheme
+                        .colorScheme
+                        .error,
+
+                cursorColor =
+                    MaterialTheme
+                        .colorScheme
+                        .primary,
+
+                errorCursorColor =
+                    MaterialTheme
+                        .colorScheme
+                        .error,
+
+                focusedLabelColor =
+                    MaterialTheme
+                        .colorScheme
+                        .primary,
+
+                unfocusedLabelColor =
+                    MaterialTheme
+                        .colorScheme
+                        .onSurfaceVariant,
+
+                errorLabelColor =
+                    MaterialTheme
+                        .colorScheme
+                        .error
             ),
-            shape = RoundedCornerShape(topStart = 4.dp, topEnd = 4.dp),
-            modifier = Modifier.fillMaxWidth()
+
+            shape =
+                RoundedCornerShape(
+                    topStart = 4.dp,
+                    topEnd = 4.dp
+                ),
+
+            modifier =
+                Modifier.fillMaxWidth()
         )
+
         if (isError) {
-            ErrorSupportText(errorMessage ?: "")
+            ErrorSupportText(
+                errorMessage ?: ""
+            )
         }
-        Spacer(Modifier.height(if (isError) 4.dp else 16.dp))
+
+        Spacer(
+            Modifier.height(
+                if (isError) 4.dp
+                else 16.dp
+            )
+        )
     }
 }
 

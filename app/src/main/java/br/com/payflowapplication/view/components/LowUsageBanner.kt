@@ -46,7 +46,7 @@ fun LowUsageBanner(
         modifier = modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(12.dp))
-            .background(SecondaryContainer)
+            .background(MaterialTheme.colorScheme.secondaryContainer)
             .clickable(enabled = assinaturas.isNotEmpty()) { showChart = true }
             .padding(12.dp),
         verticalAlignment = Alignment.CenterVertically,
@@ -58,12 +58,12 @@ fun LowUsageBanner(
                 text = "$count assinatura${if (count > 1) "s" else ""} pouco utilizada${if (count > 1) "s" else ""}",
                 style = MaterialTheme.typography.labelLarge,
                 fontWeight = FontWeight.Medium,
-                color = OnSecondaryContainer,
+                color = MaterialTheme.colorScheme.onSecondaryContainer,
             )
             Text(
                 text = "R$ ${fmt.format(valorMensal)}/mês sem uso real · ver detalhes",
                 style = MaterialTheme.typography.bodySmall,
-                color = OnSecondaryContainer.copy(alpha = 0.8f),
+                color = MaterialTheme.colorScheme.onSecondaryContainer.copy(alpha = 0.8f),
             )
         }
     }

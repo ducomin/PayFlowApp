@@ -1,3 +1,24 @@
 <resources>
     <string name="app_name">PayFlowApp</string>
+    <string name="detalhes_title">Detalhes</string>
+    <string name="valor_mensal_label">Valor mensal</string>
+    <string name="prox_vencimento_label">Próx. vencimento</string>
+    <string name="desde_label">Desde</string>
+    <string name="total_pago_label">Total pago</string>
+    <string name="uso_este_mes_label">Uso este mês</string>
+    <string name="extrato_pagamentos_label">Extrato de pagamentos</string>
+    <string name="ativa_label">Ativa</string>
+    <string name="inativa_label">Inativa</string>
+    <string name="mensal_label">Mensal</string>
+    <string name="dias_label">dias</string>
+    <string name="meses_label">meses</string>
+    <string name="dias_assistidos_label">%1$d de %2$d dias assistidos</string>
+    <string name="bom_uso_label">Bom uso ✓</string>
+    <string name="pago_label">Pago</string>
+    <string name="editar_label">Editar</string>
+    <string name="cancelar_label">Cancelar</string>
+    <string name="confirmar_label">Confirmar</string>
+    <string name="voltar_label">Voltar</string>
+    <string name="cancelar_assinatura_title">Cancelar Assinatura</string>
+    <string name="cancelar_assinatura_msg">Deseja realmente cancelar esta assinatura? Ela será marcada como inativa.</string>
 </resources>

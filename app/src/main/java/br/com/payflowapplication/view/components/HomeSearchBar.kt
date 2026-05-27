@@ -28,7 +28,7 @@ fun HomeSearchBar(
             .fillMaxWidth()
             .height(52.dp)
             .clip(RoundedCornerShape(50))
-            .background(SurfaceContainerHigh),
+            .background(MaterialTheme.colorScheme.surfaceContainerHigh),
         contentAlignment = Alignment.CenterStart
     ) {
         Row(

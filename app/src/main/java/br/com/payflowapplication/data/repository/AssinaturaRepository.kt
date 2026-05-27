@@ -16,6 +16,8 @@ class AssinaturaRepository @Inject constructor(
 
     suspend fun getById(id: Long): Assinatura? = dao.getById(id)
 
+    fun getByIdFlow(id: Long): Flow<Assinatura?> = dao.getByIdFlow(id)
+
     /**
      * Returns true when another record with the same name already exists.
      * [excludeId] = current record id in edit mode; pass 0L for new records.

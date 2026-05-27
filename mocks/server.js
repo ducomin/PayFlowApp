@@ -5,10 +5,10 @@ import { cors } from '@tinyhttp/cors'
 
 // ── Load DB ───────────────────────────────────────────────────────────────────
 const adapter = new JSONFile('db.json')
-const db = new Low(adapter, { streamings: [], consumo_mensal: [], notificacoes: [] })
+const db = new Low(adapter, { streamings: [], consumo_mensal: [], pagamentos: [], notificacoes: [] })
 await db.read()
 
-// ── App ───────────────────────────────────────────────��───────────────────────
+// ── App ───────────────────────────────────────────────────────────────────────
 const app = new App()
 
 app.use(cors())
@@ -105,6 +105,16 @@ app.get('/api/v1/streamings/:username/consumo_mensal', (req, res) => {
   })
 })
 
+// ── GET /api/v1/streamings/pagamentos?nome=<nome> ──────────────────────────────
+app.get('/api/v1/streamings/pagamentos', (req, res) => {
+  const nomeservico = (req.query['nomeservico'] ?? '').toString().toLowerCase().trim()
+  const pagamentos = db.data.pagamentos ?? []
+
+  // Filter by service name (case-insensitive)
+  const results = pagamentos.filter(p => p.nomeservico.toLowerCase().includes(nomeservico))
+  res.json(results)
+})
+
 // ── GET /api/v1/streamings — lista todos ──────────────────────────────────────
 app.get('/api/v1/streamings', (_req, res) => {
   res.json(db.data.streamings ?? [])
@@ -152,6 +162,7 @@ app.listen(PORT, () => {
   console.log(`  GET   http://localhost:${PORT}/api/v1/streamings/search?nome=%s`)
   console.log(`  GET   http://localhost:${PORT}/api/v1/streamings/:username/consumo_mensal?nome=%s&anomes=%s`)
   console.log(`  GET   http://localhost:${PORT}/api/v1/notificacoes/:username`)
+  console.log(`  GET http://localhost:${PORT}/api/v1/streamings/pagamentos?nome=%s\n`)
   console.log(`  PATCH http://localhost:${PORT}/api/v1/notificacoes/:id/lida`)
   console.log(`  PATCH http://localhost:${PORT}/api/v1/notificacoes/:username/ler-todas\n`)
 }, HOST)

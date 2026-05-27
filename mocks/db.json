@@ -543,5 +543,55 @@
       "assinaturaId": 1,
       "username": "user2"
     }
+  ],
+  "pagamentos": [
+    {
+      "nomeservico": "netflix",
+      "plano": "Mensal",
+      "data_cobranca": "2026-05-12",
+      "valor": 39.90,
+      "status": "Pago",
+      "metodo_pagamento": "Cartão de Crédito (...4321)"
+    },
+    {
+      "nomeservico": "netflix",
+      "plano": "Mensal",
+      "data_cobranca": "2026-04-12",
+      "valor": 39.90,
+      "status": "Pago",
+      "metodo_pagamento": "Cartão de Crédito (...4321)"
+    },
+    {
+      "nomeservico": "netflix",
+      "plano": "Mensal",
+      "data_cobranca": "2026-03-12",
+      "valor": 39.90,
+      "status": "Pago",
+      "metodo_pagamento": "Cartão de Crédito (...4321)"
+    },
+    {
+      "nomeservico": "amazon Prime",
+      "plano": "Anual",
+      "data_cobranca": "2026-05-01",
+      "valor": 19.90,
+      "status": "Pago",
+      "metodo_pagamento": "Cartão de Crédito (...4321)"
+    },
+    {
+      "nomeservico": "YouTube Premium",
+      "plano": "mensal",
+      "data_cobranca": "2026-05-15",
+      "valor": 24.90,
+      "status": "Pago",
+      "metodo_pagamento": "PayPal (...5678)"
+    },
+    {
+      "nomeservico": "YouTube Premium",
+      "plano": "mensal",
+      "data_cobranca": "2026-04-15",
+      "valor": 24.90,
+      "status": "Pago",
+      "metodo_pagamento": "PayPal (...5678)"
+    }
   ]
 }

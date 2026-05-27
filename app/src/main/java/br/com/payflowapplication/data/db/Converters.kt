@@ -23,14 +23,10 @@ class Converters {
     fun toTipoNotificacao(value: String): TipoNotificacao = TipoNotificacao.valueOf(value)
 
     @TypeConverter
-    fun fromTimestamp(value: Long?): LocalDate? {
-        return value?.let { LocalDate.ofEpochDay(it) }
-    }
+    fun fromLocalDate(value: LocalDate?): Long? = value?.toEpochDay()
 
     @TypeConverter
-    fun dateToTimestamp(date: LocalDate?): Long? {
-        return date?.toEpochDay()
-    }
+    fun toLocalDate(value: Long?): LocalDate? = value?.let { LocalDate.ofEpochDay(it) }
 
     @TypeConverter
     fun fromModalidade(value: Modalidade): String = value.name

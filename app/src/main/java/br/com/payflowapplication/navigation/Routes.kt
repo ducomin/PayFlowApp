@@ -15,6 +15,10 @@ object Routes {
     // Perfil
     const val PERFIL = "perfil"
 
+    //Detalhe
+    const val DETALHE_ASSINATURA = "detalhe_assinatura/{assinaturaId}"
+    fun detalheRoute(id: Long) = "detalhe_assinatura/$id"
+
     // Notificações / Avisos
     const val NOTIFICACOES = "notificacoes"
 }

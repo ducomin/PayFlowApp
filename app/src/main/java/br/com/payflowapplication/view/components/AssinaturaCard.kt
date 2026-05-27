@@ -50,7 +50,7 @@ fun AssinaturaCard(
         "R$ ${fmt.format(assinatura.valor)}"
 
     val borderModifier = if (poucoUsada)
-        Modifier.border(1.dp, SecondaryContainer, RoundedCornerShape(12.dp))
+        Modifier.border(1.dp, MaterialTheme.colorScheme.secondary, RoundedCornerShape(12.dp))
     else Modifier
 
     Card(
@@ -59,8 +59,10 @@ fun AssinaturaCard(
             .then(borderModifier)
             .clickable(onClick = onClick),
         shape = RoundedCornerShape(12.dp),
-        colors = CardDefaults.cardColors(containerColor = SurfaceContainerLow),
-        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
+        ),
+        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
     ) {
         Column(modifier = Modifier.padding(14.dp)) {
             // Header row: avatar + name + value
@@ -80,22 +82,22 @@ fun AssinaturaCard(
                         Text(
                             text = assinatura.nomeServico,
                             style = MaterialTheme.typography.titleSmall,
-                            fontWeight = FontWeight.Medium,
-                            color = OnSurface
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.onSurface
                         )
                         if (isHistorico) {
                             Text(
                                 text = "R$ ${fmt.format(assinatura.valor)}",
-                                style = MaterialTheme.typography.bodyMedium,
-                                fontWeight = FontWeight.Normal,
-                                color = OnSurfaceVariant
+                                style = MaterialTheme.typography.titleSmall,
+                                fontWeight = FontWeight.Bold,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         } else {
                             Text(
                                 text = valorLabel,
                                 style = MaterialTheme.typography.titleSmall,
                                 fontWeight = FontWeight.Bold,
-                                color = Primary
+                                color = MaterialTheme.colorScheme.primary
                             )
                         }
                     }
@@ -113,18 +115,21 @@ fun AssinaturaCard(
                             venceHoje = venceHoje
                         )
                         if (isHistorico) {
-                            val dateFormatter = java.time.format.DateTimeFormatter.ofPattern("dd/MM/yy")
-                            val dataFim = assinatura.dataFim?.format(dateFormatter) ?: "N/A"
+                            val dataFimStr = try {
+                                val dateFormatter = java.time.format.DateTimeFormatter.ofPattern("dd/MM/yy")
+                                assinatura.dataFim?.format(dateFormatter) ?: "N/A"
+                            } catch (e: Exception) { "N/A" }
+                            
                             Text(
-                                text = "Finalizada em $dataFim",
+                                text = "Finalizada em $dataFimStr",
                                 style = MaterialTheme.typography.labelSmall,
-                                color = OnSurfaceVariant
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         } else {
                             Text(
                                 text = vencimentoLabel,
                                 style = MaterialTheme.typography.labelSmall,
-                                color = OnSurfaceVariant
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         }
                     }
@@ -141,13 +146,13 @@ fun AssinaturaCard(
                     Text(
                         text = "Uso este mês",
                         style = MaterialTheme.typography.labelSmall,
-                        color = OnSurfaceVariant
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                     val usagePct = (usage * 100).toInt()
                     val usageColor = when {
-                        poucoUsada -> Secondary
+                        poucoUsada -> MaterialTheme.colorScheme.secondary
                         usagePct >= 70 -> Success
-                        else -> Primary
+                        else -> MaterialTheme.colorScheme.primary
                     }
                     Text(
                         text = "$usagePct%",
@@ -213,15 +218,15 @@ private fun categoryColor(categoria: CategoriaAssinatura): Color = when (categor
     CategoriaAssinatura.SAUDE       -> Color(0xFF00BCD4)
     CategoriaAssinatura.FINANCAS    -> Color(0xFF7B1FA2)
     CategoriaAssinatura.OUTROS      -> Color(0xFF607D8B)
-    CategoriaAssinatura.NONE        -> Color.Gray // Adicione esta linha
+    CategoriaAssinatura.NONE        -> Color.Gray
 }
 
 @Composable
 private fun StatusChip(isHistorico: Boolean, poucoUsada: Boolean, venceHoje: Boolean) {
     val (text, bg, fg) = when {
-        isHistorico -> Triple("Inativa", SurfaceVariant, OnSurfaceVariant)
-        venceHoje  -> Triple("● Vence hoje", ErrorContainer, Error)
-        poucoUsada -> Triple("⚠ Pouco usada", SecondaryContainer, Secondary)
+        isHistorico -> Triple("Inativa", MaterialTheme.colorScheme.surfaceVariant, MaterialTheme.colorScheme.onSurfaceVariant)
+        venceHoje  -> Triple("● Vence hoje", MaterialTheme.colorScheme.errorContainer, MaterialTheme.colorScheme.error)
+        poucoUsada -> Triple("⚠ Pouco usada", MaterialTheme.colorScheme.secondaryContainer, MaterialTheme.colorScheme.secondary)
         else       -> Triple("● Ativa", SuccessContainer, Success)
     }
     Box(
@@ -237,11 +242,11 @@ private fun StatusChip(isHistorico: Boolean, poucoUsada: Boolean, venceHoje: Boo
 
 @Composable
 private fun UsageProgressBar(progress: Float, poucoUsada: Boolean) {
-    val trackColor = SurfaceVariant
+    val trackColor = MaterialTheme.colorScheme.surfaceVariant
     val fillColor = when {
-        poucoUsada   -> Secondary
+        poucoUsada   -> MaterialTheme.colorScheme.secondary
         progress >= 0.7f -> Success
-        else         -> Primary
+        else         -> MaterialTheme.colorScheme.primary
     }
     Box(
         modifier = Modifier
