@@ -50,57 +50,165 @@ fun HistoryScreen(
     onNavigateBack: () -> Unit,
     viewModel: HistoryViewModel = hiltViewModel()
 ) {
+
     val uiState by viewModel.uiState.collectAsState()
 
     Scaffold(
+
+        containerColor =
+            MaterialTheme.colorScheme.background,
+
         topBar = {
+
             CenterAlignedTopAppBar(
-                title = { Text("Histórico") },
+
+                title = {
+
+                    Text(
+                        text = "Histórico",
+                        color =
+                            MaterialTheme
+                                .colorScheme
+                                .onSurface
+                    )
+                },
+
                 navigationIcon = {
-                    IconButton(onClick = onNavigateBack) {
+
+                    IconButton(
+                        onClick = onNavigateBack
+                    ) {
+
                         Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Voltar"
+                            imageVector =
+                                Icons.AutoMirrored
+                                    .Filled
+                                    .ArrowBack,
+
+                            contentDescription =
+                                "Voltar",
+
+                            tint =
+                                MaterialTheme
+                                    .colorScheme
+                                    .onSurface
                         )
                     }
                 },
+
                 actions = {
+
                     SortMenu(
-                        selectedOption = uiState.sortOption,
-                        onOptionSelected = viewModel::onSortOptionChange
+                        selectedOption =
+                            uiState.sortOption,
+
+                        onOptionSelected =
+                            viewModel::onSortOptionChange
                     )
                 },
-                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.surfaceContainer
-                )
+
+                colors =
+                    TopAppBarDefaults
+                        .centerAlignedTopAppBarColors(
+
+                            containerColor =
+                                MaterialTheme
+                                    .colorScheme
+                                    .surfaceContainer
+                        )
             )
         }
+
     ) { paddingValues ->
+
         Column(
+
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
                 .padding(horizontal = 16.dp)
+
         ) {
+
             CategoryDropdownFilter(
-                selectedCategory = uiState.selectedCategory,
-                onCategorySelected = viewModel::onCategoryFilterChange
+
+                selectedCategory =
+                    uiState.selectedCategory,
+
+                onCategorySelected =
+                    viewModel::onCategoryFilterChange
             )
 
-            if (uiState.isLoading) {
-                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    CircularProgressIndicator()
+            when {
+
+                uiState.isLoading -> {
+
+                    Box(
+                        modifier =
+                            Modifier.fillMaxSize(),
+
+                        contentAlignment =
+                            Alignment.Center
+                    ) {
+
+                        CircularProgressIndicator(
+                            color =
+                                MaterialTheme
+                                    .colorScheme
+                                    .primary
+                        )
+                    }
                 }
-            } else if (uiState.error != null) {
-                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    Text(text = uiState.error!!, color = MaterialTheme.colorScheme.error)
+
+                uiState.error != null -> {
+
+                    Box(
+                        modifier =
+                            Modifier.fillMaxSize(),
+
+                        contentAlignment =
+                            Alignment.Center
+                    ) {
+
+                        Text(
+                            text = uiState.error!!,
+
+                            color =
+                                MaterialTheme
+                                    .colorScheme
+                                    .error
+                        )
+                    }
                 }
-            } else if (uiState.historico.isEmpty()) {
-                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    Text("Nenhum resultado encontrado.")
+
+                uiState.historico.isEmpty() -> {
+
+                    Box(
+                        modifier =
+                            Modifier.fillMaxSize(),
+
+                        contentAlignment =
+                            Alignment.Center
+                    ) {
+
+                        Text(
+                            text =
+                                "Nenhum resultado encontrado.",
+
+                            color =
+                                MaterialTheme
+                                    .colorScheme
+                                    .onSurfaceVariant
+                        )
+                    }
                 }
-            } else {
-                HistoryList(historico = uiState.historico)
+
+                else -> {
+                    HistoryList(
+                        historico =
+                            uiState.historico
+                    )
+                }
             }
         }
     }
@@ -111,36 +219,101 @@ fun CategoryDropdownFilter(
     selectedCategory: CategoriaAssinatura?,
     onCategorySelected: (CategoriaAssinatura?) -> Unit
 ) {
-    var expanded by remember { mutableStateOf(false) }
-    val categories = CategoriaAssinatura.values()
 
-    Box(modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)) {
+    var expanded by remember {
+        mutableStateOf(false)
+    }
+
+    val categories =
+        CategoriaAssinatura.values()
+
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 8.dp)
+    ) {
+
         OutlinedButton(
-            onClick = { expanded = true },
-            modifier = Modifier.fillMaxWidth()
+
+            onClick = {
+                expanded = true
+            },
+
+            modifier =
+                Modifier.fillMaxWidth()
+
         ) {
-            Text(selectedCategory?.label ?: "Todas as categorias")
-            Spacer(modifier = Modifier.weight(1f))
-            Icon(Icons.Default.ArrowDropDown, contentDescription = "Abrir filtro de categoria")
+
+            Text(
+                text =
+                    selectedCategory?.label
+                        ?: "Todas as categorias",
+
+                color =
+                    MaterialTheme
+                        .colorScheme
+                        .onSurface
+            )
+
+            Spacer(
+                modifier =
+                    Modifier.weight(1f)
+            )
+
+            Icon(
+                imageVector =
+                    Icons.Default
+                        .ArrowDropDown,
+
+                contentDescription =
+                    "Abrir filtro de categoria",
+
+                tint =
+                    MaterialTheme
+                        .colorScheme
+                        .onSurface
+            )
         }
 
         DropdownMenu(
             expanded = expanded,
-            onDismissRequest = { expanded = false },
-            modifier = Modifier.fillMaxWidth()
+            onDismissRequest = {
+                expanded = false
+            },
+            modifier =
+                Modifier.fillMaxWidth()
         ) {
+
             DropdownMenuItem(
-                text = { Text("Todas as categorias") },
+
+                text = {
+
+                    Text(
+                        "Todas as categorias"
+                    )
+                },
+
                 onClick = {
+
                     onCategorySelected(null)
                     expanded = false
                 }
             )
+
             categories.forEach { category ->
+
                 DropdownMenuItem(
-                    text = { Text(category.label) },
+
+                    text = {
+                        Text(category.label)
+                    },
+
                     onClick = {
-                        onCategorySelected(category)
+
+                        onCategorySelected(
+                            category
+                        )
+
                         expanded = false
                     }
                 )
@@ -154,59 +327,157 @@ fun SortMenu(
     selectedOption: HistorySortOption,
     onOptionSelected: (HistorySortOption) -> Unit
 ) {
-    var expanded by remember { mutableStateOf(false) }
+
+    var expanded by remember {
+        mutableStateOf(false)
+    }
 
     Box {
-        TextButton(onClick = { expanded = true }) {
-            Text(selectedOption.label)
+
+        TextButton(
+            onClick = {
+                expanded = true
+            }
+        ) {
+
+            Text(
+                text =
+                    selectedOption.label,
+
+                color =
+                    MaterialTheme
+                        .colorScheme
+                        .primary
+            )
         }
+
         DropdownMenu(
             expanded = expanded,
-            onDismissRequest = { expanded = false }
-        ) {
-            HistorySortOption.values().forEach { option ->
-                DropdownMenuItem(
-                    text = { Text(option.label) },
-                    onClick = {
-                        onOptionSelected(option)
-                        expanded = false
-                    }
-                )
+
+            onDismissRequest = {
+                expanded = false
             }
+        ) {
+
+            HistorySortOption
+                .values()
+                .forEach { option ->
+
+                    DropdownMenuItem(
+
+                        text = {
+                            Text(option.label)
+                        },
+
+                        onClick = {
+
+                            onOptionSelected(
+                                option
+                            )
+
+                            expanded = false
+                        }
+                    )
+                }
         }
     }
 }
 
 @Composable
-fun HistoryList(historico: List<Assinatura>) {
+fun HistoryList(
+    historico: List<Assinatura>
+) {
+
     LazyColumn(
-        verticalArrangement = Arrangement.spacedBy(10.dp),
-        contentPadding = PaddingValues(vertical = 16.dp)
+
+        verticalArrangement =
+            Arrangement.spacedBy(10.dp),
+
+        contentPadding =
+            PaddingValues(vertical = 16.dp)
+
     ) {
+
         items(historico) { assinatura ->
-            AssinaturaCard(assinatura = assinatura, isHistorico = true)
+
+            AssinaturaCard(
+                assinatura = assinatura,
+                isHistorico = true
+            )
         }
     }
 }
 
 @Composable
-fun StatusChip(ativa: Boolean) {
-    val (text, color, containerColor) = if (!ativa) {
-        Triple("Inativa", MaterialTheme.colorScheme.onSurfaceVariant, MaterialTheme.colorScheme.surfaceVariant)
+fun StatusChip(
+    ativa: Boolean
+) {
+
+    val (
+        text,
+        color,
+        containerColor
+    ) = if (!ativa) {
+
+        Triple(
+
+            "Inativa",
+
+            MaterialTheme
+                .colorScheme
+                .onSurfaceVariant,
+
+            MaterialTheme
+                .colorScheme
+                .surfaceVariant
+        )
+
     } else {
-        Triple("Ativa", MaterialTheme.colorScheme.primary, MaterialTheme.colorScheme.primaryContainer)
+
+        Triple(
+
+            "Ativa",
+
+            MaterialTheme
+                .colorScheme
+                .primary,
+
+            MaterialTheme
+                .colorScheme
+                .primaryContainer
+        )
     }
 
     Surface(
-        shape = MaterialTheme.shapes.extraSmall,
-        color = containerColor,
-        contentColor = color,
+        shape =
+            MaterialTheme
+                .shapes
+                .extraSmall,
+
+        color =
+            containerColor,
+
+        contentColor =
+            color,
     ) {
+
         Text(
+
             text = text,
-            style = MaterialTheme.typography.labelSmall,
-            fontWeight = FontWeight.Medium,
-            modifier = Modifier.padding(horizontal = 10.dp, vertical = 3.dp)
+
+            style =
+                MaterialTheme
+                    .typography
+                    .labelSmall,
+
+            fontWeight =
+                FontWeight.Medium,
+
+            modifier =
+                Modifier.padding(
+                    horizontal = 10.dp,
+                    vertical = 3.dp
+                )
         )
     }
 }

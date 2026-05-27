@@ -20,7 +20,7 @@ fun FieldLabel(text: String, modifier: Modifier = Modifier) {
         text = text,
         style = MaterialTheme.typography.labelSmall,
         fontWeight = FontWeight.Medium,
-        color = Primary,
+        color = MaterialTheme.colorScheme.primary,
         modifier = modifier.padding(start = 16.dp)
     )
 }
@@ -30,7 +30,7 @@ fun ErrorSupportText(message: String, modifier: Modifier = Modifier) {
     Text(
         text = message,
         style = MaterialTheme.typography.bodySmall,
-        color = Error,
+        color = MaterialTheme.colorScheme.error,
         modifier = modifier.padding(start = 16.dp, top = 4.dp)
     )
 }

@@ -56,7 +56,7 @@ fun DetalheScreen(
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = stringResource(R.string.voltar_label),
-                            tint = OnSurface
+                            tint = MaterialTheme.colorScheme.onSurface
                         )
                     }
                 },
@@ -65,7 +65,7 @@ fun DetalheScreen(
                         Text(
                             text = stringResource(R.string.detalhes_title),
                             style = MaterialTheme.typography.titleLarge,
-                            color = OnSurface,
+                            color = MaterialTheme.colorScheme.onSurface,
                             fontWeight = FontWeight.SemiBold
                         )
                     }
@@ -75,26 +75,28 @@ fun DetalheScreen(
                         Icon(
                             imageVector = Icons.Default.MoreVert,
                             contentDescription = null,
-                            tint = OnSurface
+                            tint = MaterialTheme.colorScheme.onSurface
                         )
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Surface
+                    containerColor = MaterialTheme.colorScheme.surface
                 )
             )
         },
-        containerColor = Surface
+        containerColor = MaterialTheme.colorScheme.surface
     ) { innerPadding ->
         when (val state = uiState) {
             is DetalheUiState.Loading -> {
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    CircularProgressIndicator(color = Primary)
+                    CircularProgressIndicator(
+    color = MaterialTheme.colorScheme.primary
+)
                 }
             }
             is DetalheUiState.Error -> {
                 Box(modifier = Modifier.fillMaxSize().padding(16.dp), contentAlignment = Alignment.Center) {
-                    Text(text = state.message, color = Error, textAlign = TextAlign.Center)
+                    Text(text = state.message, color = MaterialTheme.colorScheme.error, textAlign = TextAlign.Center)
                 }
             }
             is DetalheUiState.Success -> {
@@ -120,7 +122,7 @@ fun DetalheScreen(
                         onNavigateBack()
                     }
                 }) {
-                    Text(stringResource(R.string.confirmar_label), color = Error)
+                    Text(stringResource(R.string.confirmar_label), color = MaterialTheme.colorScheme.error)
                 }
             },
             dismissButton = {
@@ -169,7 +171,7 @@ private fun DetalheContent(
                     onClick = onEditClick,
                     modifier = Modifier.weight(1f),
                     shape = RoundedCornerShape(12.dp),
-                    colors = ButtonDefaults.outlinedButtonColors(contentColor = Primary)
+                    colors = ButtonDefaults.outlinedButtonColors(contentColor = MaterialTheme.colorScheme.primary)
                 ) {
                     Icon(imageVector = Icons.Default.Edit, contentDescription = null, modifier = Modifier.size(18.dp))
                     Spacer(modifier = Modifier.width(8.dp))
@@ -180,8 +182,8 @@ private fun DetalheContent(
                     onClick = onCancelClick,
                     modifier = Modifier.weight(1f),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = ErrorContainer.copy(alpha = 0.2f),
-                        contentColor = Error
+                        containerColor = MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.2f),
+                        contentColor = MaterialTheme.colorScheme.error
                     ),
                     shape = RoundedCornerShape(12.dp)
                 ) {
@@ -294,7 +296,7 @@ private fun MetricGrid(state: DetalheUiState.Success, modifier: Modifier = Modif
             MetricCard(
                 label = stringResource(R.string.valor_mensal_label),
                 value = currencyFmt.format(state.assinatura.valor),
-                valueColor = Primary,
+                valueColor = MaterialTheme.colorScheme.primary,
                 modifier = Modifier.weight(1f)
             )
             MetricCard(
@@ -318,7 +320,7 @@ private fun MetricGrid(state: DetalheUiState.Success, modifier: Modifier = Modif
             MetricCard(
                 label = stringResource(R.string.total_pago_label),
                 value = currencyFmt.format(state.totalPago),
-                valueColor = Secondary,
+                valueColor = MaterialTheme.colorScheme.secondary,
                 modifier = Modifier.weight(1f)
             )
         }
@@ -330,14 +332,14 @@ private fun MetricCard(
     label: String,
     value: String,
     modifier: Modifier = Modifier,
-    valueColor: Color = OnSurface,
+    valueColor: Color = MaterialTheme.colorScheme.onSurface,
     subValue: String? = null,
-    subValueColor: Color = OnSurfaceVariant,
+    subValueColor: Color = MaterialTheme.colorScheme.onSurfaceVariant,
 ) {
     Card(
         modifier = modifier.height(115.dp),
         shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = SurfaceContainer)
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer)
     ) {
         Column(
             modifier = Modifier
@@ -348,7 +350,7 @@ private fun MetricCard(
             Text(
                 text = label,
                 style = MaterialTheme.typography.labelMedium,
-                color = OnSurfaceVariant
+                color = MaterialTheme.colorScheme.onSurfaceVariant
             )
             Text(
                 text = value,
@@ -373,7 +375,7 @@ private fun PaymentHistorySection(historico: List<Pagamento>, modifier: Modifier
         Text(
             text = stringResource(R.string.extrato_pagamentos_label),
             style = MaterialTheme.typography.titleMedium,
-            color = OnSurface,
+            color = MaterialTheme.colorScheme.onSurface,
             fontWeight = FontWeight.Bold,
             modifier = Modifier.padding(top = 8.dp)
         )
@@ -391,7 +393,7 @@ private fun PaymentItemRow(item: Pagamento, modifier: Modifier = Modifier) {
     Card(
         modifier = modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = SurfaceContainerLow),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerLow),
         border = CardDefaults.outlinedCardBorder()
     ) {
         Row(
@@ -420,20 +422,20 @@ private fun PaymentItemRow(item: Pagamento, modifier: Modifier = Modifier) {
                 Text(
                     text = item.dataCobranca,
                     style = MaterialTheme.typography.bodyLarge,
-                    color = OnSurface,
+                    color = MaterialTheme.colorScheme.onSurface,
                     fontWeight = FontWeight.Medium
                 )
                 Text(
                     text = "${item.dataCobranca} • ${stringResource(R.string.pago_label)}",
                     style = MaterialTheme.typography.bodySmall,
-                    color = OnSurfaceVariant
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
 
             Text(
                 text = currencyFmt.format(item.valor),
                 style = MaterialTheme.typography.bodyLarge,
-                color = Primary,
+                color = MaterialTheme.colorScheme.primary,
                 fontWeight = FontWeight.Bold
             )
         }

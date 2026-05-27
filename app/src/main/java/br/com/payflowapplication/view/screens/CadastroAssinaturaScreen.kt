@@ -16,7 +16,6 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import br.com.payflowapplication.ui.theme.*
 import br.com.payflowapplication.view.components.CategoriaChipsGroup
 import br.com.payflowapplication.view.components.CurrencyTextField
 import br.com.payflowapplication.view.components.ErrorSupportText
@@ -27,11 +26,6 @@ import br.com.payflowapplication.view.components.StepIndicator
 import br.com.payflowapplication.view.components.StreamingAutocompleteField
 import br.com.payflowapplication.viewmodels.CadastroAssinaturaViewModel
 
-// ─────────────────────────────────────────────────────────────────────────────
-// Tela 06 — Cadastro / Edição de Assinatura
-// Components: TopAppBar · StepIndicator · FilledTextField · SegmentedButton ·
-//             CategoryChips · Outlined+Filled buttons · SnackBar feedback
-// ─────────────────────────────────────────────────────────────────────────────
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CadastroAssinaturaScreen(
@@ -39,6 +33,7 @@ fun CadastroAssinaturaScreen(
     onSalvoComSucesso: () -> Unit,
     viewModel: CadastroAssinaturaViewModel = hiltViewModel()
 ) {
+
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
 
@@ -52,204 +47,427 @@ fun CadastroAssinaturaScreen(
     }
 
     // Unsaved-changes confirmation dialog state
-    var showCancelDialog by remember { mutableStateOf(false) }
+    var showCancelDialog by remember {
+        mutableStateOf(false)
+    }
 
     if (showCancelDialog) {
+
         AlertDialog(
-            onDismissRequest = { showCancelDialog = false },
-            title = { Text("Descartar alterações?") },
-            text = { Text("Você tem alterações não salvas. Deseja sair sem salvar?") },
+            onDismissRequest = {
+                showCancelDialog = false
+            },
+
+            title = {
+                Text("Descartar alterações?")
+            },
+
+            text = {
+                Text(
+                    "Você tem alterações não salvas. Deseja sair sem salvar?"
+                )
+            },
+
             confirmButton = {
-                TextButton(onClick = {
-                    showCancelDialog = false
-                    onNavigateBack()
-                }) { Text("Sair", color = MaterialTheme.colorScheme.error) }
+                TextButton(
+                    onClick = {
+                        showCancelDialog = false
+                        onNavigateBack()
+                    }
+                ) {
+                    Text(
+                        "Sair",
+                        color = MaterialTheme.colorScheme.error
+                    )
+                }
             },
+
             dismissButton = {
-                TextButton(onClick = { showCancelDialog = false }) { Text("Continuar") }
+                TextButton(
+                    onClick = {
+                        showCancelDialog = false
+                    }
+                ) {
+                    Text("Continuar")
+                }
             },
-            containerColor = SurfaceContainerHigh,
+
+            containerColor =
+                MaterialTheme.colorScheme.surfaceContainerHigh
         )
     }
 
     Scaffold(
-        containerColor = Background,
-        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
+
+        containerColor =
+            MaterialTheme.colorScheme.background,
+
+        snackbarHost = {
+            SnackbarHost(
+                hostState = snackbarHostState
+            )
+        },
+
         topBar = {
-            // ── M3 Top App Bar ─────────────────────────────────────────────
+
             TopAppBar(
+
                 title = {
+
                     Text(
-                        text = if (uiState.isEditMode) "Editar Assinatura" else "Nova Assinatura",
-                        style = MaterialTheme.typography.titleLarge,
-                        color = OnSurface
+                        text =
+                            if (uiState.isEditMode)
+                                "Editar Assinatura"
+                            else
+                                "Nova Assinatura",
+
+                        style =
+                            MaterialTheme.typography.titleLarge,
+
+                        color =
+                            MaterialTheme.colorScheme.onSurface
                     )
                 },
+
                 navigationIcon = {
-                    IconButton(onClick = {
-                        if (uiState.hasUnsavedChanges) showCancelDialog = true
-                        else onNavigateBack()
-                    }) {
+
+                    IconButton(
+                        onClick = {
+
+                            if (uiState.hasUnsavedChanges)
+                                showCancelDialog = true
+                            else
+                                onNavigateBack()
+                        }
+                    ) {
+
                         Icon(
                             imageVector = Icons.Default.Close,
                             contentDescription = "Fechar",
-                            tint = OnSurface
+
+                            tint =
+                                MaterialTheme.colorScheme.onSurface
                         )
                     }
                 },
+
                 actions = {
+
                     TextButton(
-                        onClick = { viewModel.salvar() },
-                        enabled = !uiState.isSaving
+                        onClick = {
+                            viewModel.salvar()
+                        },
+
+                        enabled =
+                            !uiState.isSaving
                     ) {
+
                         Text(
                             text = "Salvar",
-                            style = MaterialTheme.typography.labelLarge,
-                            color = Primary,
-                            fontWeight = FontWeight.Medium
+
+                            style =
+                                MaterialTheme.typography.labelLarge,
+
+                            color =
+                                MaterialTheme.colorScheme.primary,
+
+                            fontWeight =
+                                FontWeight.Medium
                         )
                     }
                 },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = SurfaceContainerLow
-                )
+
+                colors =
+                    TopAppBarDefaults.topAppBarColors(
+                        containerColor =
+                            MaterialTheme
+                                .colorScheme
+                                .surfaceContainerLow
+                    )
             )
         }
+
     ) { innerPadding ->
+
         Column(
+
             modifier = Modifier
                 .padding(innerPadding)
                 .fillMaxSize()
-                .verticalScroll(rememberScrollState())
+                .verticalScroll(
+                    rememberScrollState()
+                )
                 .padding(horizontal = 16.dp)
+
         ) {
 
-            Spacer(Modifier.height(12.dp))
+            Spacer(
+                Modifier.height(12.dp)
+            )
 
-            // ── Step Indicator (3 steps, step 1 & 2 filled) ────────────────
-            StepIndicator(currentStep = if (uiState.isEditMode) 3 else 2, totalSteps = 3)
+            StepIndicator(
+                currentStep =
+                    if (uiState.isEditMode)
+                        3
+                    else
+                        2,
 
-            Spacer(Modifier.height(16.dp))
+                totalSteps = 3
+            )
 
-            // ── Nome do Serviço — Autocomplete ──────────────────────────────
+            Spacer(
+                Modifier.height(16.dp)
+            )
+
             StreamingAutocompleteField(
                 label = "Nome do serviço *",
                 value = uiState.nomeServico,
                 onValueChange = viewModel::onNomeChange,
-                suggestions = uiState.streamingSuggestions,
-                isLoading = uiState.isLoadingSuggestions,
-                showSuggestions = uiState.showSuggestions,
-                onSuggestionSelected = viewModel::onStreamingSelected,
-                onDismiss = viewModel::onDismissSuggestions,
-                errorMessage = uiState.nomeError
+                suggestions =
+                    uiState.streamingSuggestions,
+                isLoading =
+                    uiState.isLoadingSuggestions,
+                showSuggestions =
+                    uiState.showSuggestions,
+                onSuggestionSelected =
+                    viewModel::onStreamingSelected,
+                onDismiss =
+                    viewModel::onDismissSuggestions,
+                errorMessage =
+                    uiState.nomeError
             )
 
-            // ── Valor ────────────────────────────────────────────────────────
             CurrencyTextField(
                 label = "Valor *",
                 digits = uiState.valor,
-                onDigitsChange = viewModel::onValorChange,
-                errorMessage = uiState.valorError
+                onDigitsChange =
+                    viewModel::onValorChange,
+                errorMessage =
+                    uiState.valorError
             )
 
-            // ── Modalidade — SegmentedButton ────────────────────────────────
-            FieldLabel(text = "Modalidade *")
-            Spacer(Modifier.height(4.dp))
+            FieldLabel(
+                text = "Modalidade *"
+            )
+
+            Spacer(
+                Modifier.height(4.dp)
+            )
+
             ModalidadeSegmentedButton(
-                selected = uiState.modalidade,
-                onSelect = viewModel::onModalidadeChange
+                selected =
+                    uiState.modalidade,
+                onSelect =
+                    viewModel::onModalidadeChange
             )
-            Spacer(Modifier.height(16.dp))
 
-            // ── Data de Vencimento ───────────────────────────────────────────
+            Spacer(
+                Modifier.height(16.dp)
+            )
+
             FilledTextField(
-                label = "Dia de vencimento *",
-                value = uiState.diaVencimento,
-                onValueChange = viewModel::onVencimentoChange,
-                placeholder = "Ex: 10 (dia do mês)",
-                errorMessage = uiState.vencimentoError,
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+                label =
+                    "Dia de vencimento *",
+
+                value =
+                    uiState.diaVencimento,
+
+                onValueChange =
+                    viewModel::onVencimentoChange,
+
+                placeholder =
+                    "Ex: 10 (dia do mês)",
+
+                errorMessage =
+                    uiState.vencimentoError,
+
+                keyboardOptions =
+                    KeyboardOptions(
+                        keyboardType =
+                            KeyboardType.Number
+                    )
             )
 
-            // ── Categoria — FilterChips ─────────────────────────────────────
-            FieldLabel(text = "Categoria *")
-            Spacer(Modifier.height(6.dp))
+            FieldLabel(
+                text = "Categoria *"
+            )
+
+            Spacer(
+                Modifier.height(6.dp)
+            )
+
             CategoriaChipsGroup(
-                selected = uiState.categoria,
-                onSelect = viewModel::onCategoriaChange
-            )
-            if (uiState.categoriaError != null) {
-                ErrorSupportText(uiState.categoriaError!!)
-            }
-            Spacer(Modifier.height(16.dp))
+                selected =
+                    uiState.categoria,
 
-            // ── URL (opcional) ───────────────────────────────────────────────
+                onSelect =
+                    viewModel::onCategoriaChange
+            )
+
+            if (uiState.categoriaError != null) {
+
+                ErrorSupportText(
+                    uiState.categoriaError!!
+                )
+            }
+
+            Spacer(
+                Modifier.height(16.dp)
+            )
+
             FilledTextField(
                 label = "URL do serviço",
-                value = uiState.urlServico,
-                onValueChange = viewModel::onUrlChange,
-                placeholder = "https://…",
-                errorMessage = uiState.urlError,
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Uri)
+
+                value =
+                    uiState.urlServico,
+
+                onValueChange =
+                    viewModel::onUrlChange,
+
+                placeholder =
+                    "https://…",
+
+                errorMessage =
+                    uiState.urlError,
+
+                keyboardOptions =
+                    KeyboardOptions(
+                        keyboardType =
+                            KeyboardType.Uri
+                    )
             )
 
-            Spacer(Modifier.height(8.dp))
+            Spacer(
+                Modifier.height(8.dp)
+            )
 
-            // ── Action Buttons ───────────────────────────────────────────────
             Row(
+
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = 32.dp),
-                horizontalArrangement = Arrangement.spacedBy(12.dp)
+
+                horizontalArrangement =
+                    Arrangement.spacedBy(12.dp)
+
             ) {
-                // Outlined — Cancelar
+
                 OutlinedButton(
+
                     onClick = {
-                        if (uiState.hasUnsavedChanges) showCancelDialog = true
-                        else onNavigateBack()
+
+                        if (uiState.hasUnsavedChanges)
+                            showCancelDialog = true
+                        else
+                            onNavigateBack()
                     },
-                    modifier = Modifier.weight(1f),
-                    shape = CircleShape,
-                    colors = ButtonDefaults.outlinedButtonColors(
-                        contentColor = Primary
-                    ),
-                    border = ButtonDefaults.outlinedButtonBorder.copy(
-                        brush = SolidColor(Outline)
-                    )
+
+                    modifier =
+                        Modifier.weight(1f),
+
+                    shape =
+                        CircleShape,
+
+                    colors =
+                        ButtonDefaults.outlinedButtonColors(
+                            contentColor =
+                                MaterialTheme
+                                    .colorScheme
+                                    .primary
+                        ),
+
+                    border =
+                        ButtonDefaults
+                            .outlinedButtonBorder
+                            .copy(
+                                brush =
+                                    SolidColor(
+                                        MaterialTheme
+                                            .colorScheme
+                                            .outline
+                                    )
+                            )
+
                 ) {
-                    Text("Cancelar", style = MaterialTheme.typography.labelLarge)
+
+                    Text(
+                        "Cancelar",
+                        style =
+                            MaterialTheme
+                                .typography
+                                .labelLarge
+                    )
                 }
 
-                // Filled — Salvar
                 Button(
-                    onClick = { viewModel.salvar() },
-                    enabled = !uiState.isSaving,
-                    modifier = Modifier.weight(2f),
-                    shape = CircleShape,
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Primary,
-                        contentColor = OnPrimary,
-                        disabledContainerColor = SurfaceVariant,
-                        disabledContentColor = OnSurfaceVariant
-                    )
-                ) {
-                    if (uiState.isSaving) {
-                        CircularProgressIndicator(
-                            modifier = Modifier.size(18.dp),
-                            strokeWidth = 2.dp,
-                            color = OnPrimary
+
+                    onClick = {
+                        viewModel.salvar()
+                    },
+
+                    enabled =
+                        !uiState.isSaving,
+
+                    modifier =
+                        Modifier.weight(2f),
+
+                    shape =
+                        CircleShape,
+
+                    colors =
+                        ButtonDefaults.buttonColors(
+
+                            containerColor =
+                                MaterialTheme
+                                    .colorScheme
+                                    .primary,
+
+                            contentColor =
+                                MaterialTheme
+                                    .colorScheme
+                                    .onPrimary,
+
+                            disabledContainerColor =
+                                MaterialTheme
+                                    .colorScheme
+                                    .surfaceVariant,
+
+                            disabledContentColor =
+                                MaterialTheme
+                                    .colorScheme
+                                    .onSurfaceVariant
                         )
-                        Spacer(Modifier.width(8.dp))
+
+                ) {
+
+                    if (uiState.isSaving) {
+
+                        CircularProgressIndicator(
+                            modifier =
+                                Modifier.size(18.dp),
+
+                            strokeWidth = 2.dp,
+
+                            color =
+                                MaterialTheme
+                                    .colorScheme
+                                    .onPrimary
+                        )
+
+                        Spacer(
+                            Modifier.width(8.dp)
+                        )
                     }
-                    Text("Salvar assinatura", style = MaterialTheme.typography.labelLarge)
+
+                    Text(
+                        "Salvar assinatura",
+                        style =
+                            MaterialTheme
+                                .typography
+                                .labelLarge
+                    )
                 }
             }
         }
     }
 }
-
-
-
-
-
-

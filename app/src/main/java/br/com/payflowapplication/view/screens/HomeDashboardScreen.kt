@@ -52,14 +52,14 @@ fun HomeDashboardScreen(
                 navigationIcon = {
                     IconButton(onClick = { /* drawer */ }) {
                         Icon(Icons.Default.Menu, contentDescription = "Menu",
-                            tint = OnSurfaceVariant)
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant)
                     }
                 },
                 title = {
                     Text(
                         text = "PayFlow",
                         fontWeight = FontWeight.Bold,
-                        color = Primary
+                        color = MaterialTheme.colorScheme.primary
                     )
                 },
                 actions = {
@@ -72,14 +72,14 @@ fun HomeDashboardScreen(
                                 .clip(CircleShape)
                                 .background(
                                     Brush.linearGradient(
-                                        colors = listOf(Primary, Secondary)
+                                        colors = listOf(MaterialTheme.colorScheme.primary, MaterialTheme.colorScheme.secondary)
                                     )
                                 ),
                             contentAlignment = Alignment.Center
                         ) {
                             Text(
                                 text = "US",
-                                color = OnPrimary,
+                                color = MaterialTheme.colorScheme.onPrimary,
                                 style = MaterialTheme.typography.labelMedium,
                                 fontWeight = FontWeight.Bold
                             )
@@ -87,7 +87,7 @@ fun HomeDashboardScreen(
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = SurfaceContainer
+                    containerColor = MaterialTheme.colorScheme.surfaceContainer
                 )
             )
         },
@@ -105,12 +105,12 @@ fun HomeDashboardScreen(
                 onClick = onNovaAssinatura,
                 icon = { Icon(Icons.Default.Add, contentDescription = null) },
                 text = { Text("Nova Assinatura") },
-                containerColor = PrimaryContainer,
-                contentColor = OnPrimaryContainer
+                containerColor = MaterialTheme.colorScheme.primaryContainer,
+                contentColor = MaterialTheme.colorScheme.onPrimaryContainer
             )
         },
         floatingActionButtonPosition = FabPosition.End,
-        containerColor = Surface
+        containerColor = MaterialTheme.colorScheme.surface
     ) { innerPadding ->
 
         when (val state = uiState) {
@@ -178,13 +178,13 @@ private fun EmptyContent(
         Text(
             text = "Nenhuma assinatura ainda",
             style = MaterialTheme.typography.headlineSmall,
-            color = OnSurface
+            color = MaterialTheme.colorScheme.onSurface
         )
         Spacer(Modifier.height(8.dp))
         Text(
             text = "Cadastre sua primeira assinatura e acompanhe todos os seus gastos recorrentes.",
             style = MaterialTheme.typography.bodyMedium,
-            color = OnSurfaceVariant,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
             textAlign = androidx.compose.ui.text.style.TextAlign.Center
         )
         Spacer(Modifier.height(24.dp))
@@ -212,13 +212,13 @@ private fun ErrorContent(message: String, modifier: Modifier = Modifier) {
         Text(
             text = "Algo deu errado",
             style = MaterialTheme.typography.headlineSmall,
-            color = Error
+            color = MaterialTheme.colorScheme.error
         )
         Spacer(Modifier.height(8.dp))
         Text(
             text = message,
             style = MaterialTheme.typography.bodyMedium,
-            color = OnSurfaceVariant
+            color = MaterialTheme.colorScheme.onSurfaceVariant
         )
     }
 }
@@ -246,12 +246,12 @@ private fun SuccessContent(
                 Text(
                     text = "Olá, ${state.nomeUsuario}! 👋",
                     style = MaterialTheme.typography.titleLarge,
-                    color = OnSurface
+                    color = MaterialTheme.colorScheme.onSurface
                 )
                 Text(
                     text = state.mesReferencia,
                     style = MaterialTheme.typography.bodyMedium,
-                    color = OnSurfaceVariant
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
         }
@@ -302,7 +302,7 @@ private fun SuccessContent(
             Text(
                 text = "Assinaturas ativas",
                 style = MaterialTheme.typography.titleSmall,
-                color = OnSurfaceVariant,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
                 fontWeight = FontWeight.Medium,
                 modifier = Modifier.padding(top = 16.dp, bottom = 8.dp)
             )
@@ -322,7 +322,7 @@ private fun SuccessContent(
                     Text(
                         "Nenhuma assinatura encontrada",
                         style = MaterialTheme.typography.bodyMedium,
-                        color = OnSurfaceVariant
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
             }

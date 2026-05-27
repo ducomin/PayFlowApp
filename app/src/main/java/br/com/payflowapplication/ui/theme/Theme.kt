@@ -42,6 +42,12 @@ private val DarkColorScheme = darkColorScheme(
     surfaceVariant = SurfaceVariant,
     onSurfaceVariant = OnSurfaceVariant,
 
+    surfaceContainerLowest = SurfaceContainerLowest,
+    surfaceContainerLow = SurfaceContainerLow,
+    surfaceContainer = SurfaceContainer,
+    surfaceContainerHigh = SurfaceContainerHigh,
+    surfaceContainerHighest = SurfaceContainerHighest,
+
     outline = Outline,
     outlineVariant = OutlineVariant,
 
@@ -88,6 +94,12 @@ private val LightColorScheme = lightColorScheme(
     surfaceVariant = LightSurfaceVariant,
     onSurfaceVariant = LightOnSurfaceVariant,
 
+    surfaceContainerLowest = LightSurfaceContainerLowest,
+    surfaceContainerLow = LightSurfaceContainerLow,
+    surfaceContainer = LightSurfaceContainer,
+    surfaceContainerHigh = LightSurfaceContainerHigh,
+    surfaceContainerHighest = LightSurfaceContainerHighest,
+
     outline = LightOutline,
     outlineVariant = LightOutlineVariant,
 
@@ -104,15 +116,12 @@ fun PayFlowTheme(
     darkTheme: Boolean,
     content: @Composable () -> Unit
 ) {
-
     MaterialTheme(
-
         colorScheme = if (darkTheme) {
             DarkColorScheme
         } else {
             LightColorScheme
         },
-
         content = content
     )
 }

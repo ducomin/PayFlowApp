@@ -120,7 +120,7 @@ fun LowUsageChartModal(
                             }
                         }
                         .clip(RoundedCornerShape(20.dp))
-                        .background(SurfaceContainerHigh)
+                        .background(MaterialTheme.colorScheme.surfaceContainerHigh)
                         .padding(24.dp),
                     verticalArrangement = Arrangement.spacedBy(20.dp),
                 ) {
@@ -135,19 +135,19 @@ fun LowUsageChartModal(
                                 text = "Assinaturas pouco utilizadas",
                                 style = MaterialTheme.typography.titleMedium,
                                 fontWeight = FontWeight.SemiBold,
-                                color = OnSurface,
+                                color = MaterialTheme.colorScheme.onSurface,
                             )
                             Text(
                                 text = "Dias de uso no mês atual",
                                 style = MaterialTheme.typography.bodySmall,
-                                color = OnSurfaceVariant,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
                             )
                         }
                         IconButton(onClick = onDismiss) {
                             Icon(
                                 imageVector = Icons.Default.Close,
                                 contentDescription = "Fechar",
-                                tint = OnSurfaceVariant,
+                                tint = MaterialTheme.colorScheme.onSurfaceVariant,
                             )
                         }
                     }
@@ -172,18 +172,18 @@ fun LowUsageChartModal(
                                 Text(
                                     text = label,
                                     style = MaterialTheme.typography.labelSmall,
-                                    color = OnSurfaceVariant,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                                 )
                             }
                         }
                     }
 
                     // ── Footer hint ──────────────────────────────────────────
-                    HorizontalDivider(color = OutlineVariant)
+                    HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
                     Text(
                         text = "💡 Considere cancelar assinaturas com 0–3 dias de uso.",
                         style = MaterialTheme.typography.bodySmall,
-                        color = Secondary.copy(alpha = 0.9f),
+                        color = MaterialTheme.colorScheme.secondary.copy(alpha = 0.9f),
                     )
                 }
             }
