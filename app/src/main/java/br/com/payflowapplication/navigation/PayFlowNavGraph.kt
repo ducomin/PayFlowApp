@@ -10,6 +10,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import br.com.payflowapplication.view.screens.CadastroAssinaturaScreen
 import br.com.payflowapplication.view.screens.DetalheScreen
+import br.com.payflowapplication.view.screens.SplashScreen
 import br.com.payflowapplication.view.screens.HistoryScreen
 import br.com.payflowapplication.view.screens.HomeDashboardScreen
 import br.com.payflowapplication.view.screens.NotificacoesScreen
@@ -18,10 +19,24 @@ import br.com.payflowapplication.view.screens.ProfileScreen
 @Composable
 fun PayFlowNavGraph(darkTheme: Boolean,
                     onThemeChange: (Boolean) -> Unit,
-                    startDestination: String = Routes.HOME) {
+                    startDestination: String = Routes.SPLASH) {
     val navController = rememberNavController()
 
     NavHost(navController = navController, startDestination = startDestination) {
+
+        // ── Splash ───────────────────────────────────────────────────────────
+        composable(
+            route = Routes.SPLASH,
+            exitTransition = { fadeOut(tween(300)) }
+        ) {
+            SplashScreen(
+                onFinished = {
+                    navController.navigate(Routes.HOME) {
+                        popUpTo(Routes.SPLASH) { inclusive = true }
+                    }
+                }
+            )
+        }
 
         // ── Home / Dashboard ─────────────────────────────────────────────────
         composable(

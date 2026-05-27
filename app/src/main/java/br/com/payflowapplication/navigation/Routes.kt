@@ -1,6 +1,9 @@
 package br.com.payflowapplication.navigation
 
 object Routes {
+    // Splash
+    const val SPLASH = "splash"
+
     // Home / Dashboard
     const val HOME = "home"
 
