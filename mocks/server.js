@@ -5,10 +5,10 @@ import { cors } from '@tinyhttp/cors'
 
 // ── Load DB ───────────────────────────────────────────────────────────────────
 const adapter = new JSONFile('db.json')
-const db = new Low(adapter, { streamings: [], consumo_mensal: [] })
+const db = new Low(adapter, { streamings: [], consumo_mensal: [], pagamentos: [] })
 await db.read()
 
-// ── App ───────────────────────────────────────────────��───────────────────────
+// ── App ───────────────────────────────────────────────────────────────────────
 const app = new App()
 
 app.use(cors())
@@ -22,23 +22,11 @@ app.get('/api/v1/streamings/search', (req, res) => {
 })
 
 // ── GET /api/v1/streamings/:username/consumo_mensal ───────────────────────────
-// Query params:
-//   nome    — nome do serviço (case-insensitive)
-//   anomes  — referência no formato YYYY-MM  (ex: 2026-05)
-//
-// Retorno quando o serviço é conhecido no db:
-//   { id, username, mes_referencia, total_dias_no_mes, dias_utilizados, total_minutos_mes }
-//
-// Fallback para serviços não cadastrados em db.json:
-//   dias_utilizados = 3  (≤ 10% do mês → "pouco usada")
-//   total_minutos_mes = 60
-// ─────────────────────────────────────────────────────────────────────────────
 app.get('/api/v1/streamings/:username/consumo_mensal', (req, res) => {
   const username = (req.params['username'] ?? '').toString().toLowerCase().trim()
   const nome     = (req.query['nome']   ?? '').toString().toLowerCase().trim()
   const anomes   = (req.query['anomes'] ?? '').toString().trim()
 
-  // Validate required params
   if (!nome) {
     return res.status(400).json({ error: 'Parâmetro "nome" é obrigatório.' })
   }
@@ -46,14 +34,11 @@ app.get('/api/v1/streamings/:username/consumo_mensal', (req, res) => {
     return res.status(400).json({ error: 'Parâmetro "anomes" inválido. Use o formato YYYY-MM.' })
   }
 
-  // Calculate total days in the requested month
   const [year, month] = anomes.split('-').map(Number)
-  const totalDias = new Date(year, month, 0).getDate()  // day 0 of next month = last day of current
+  const totalDias = new Date(year, month, 0).getDate()
 
   const consumos = db.data.consumo_mensal ?? []
 
-  // Look for an exact record: nome (case-insensitive) + mes_referencia
-  // username "*" means "shared / any user" — acts as a wildcard seed
   const registro = consumos.find(c =>
     c.nome === nome &&
     c.mes_referencia === anomes &&
@@ -71,8 +56,6 @@ app.get('/api/v1/streamings/:username/consumo_mensal', (req, res) => {
     })
   }
 
-  // ── Fallback: serviço não cadastrado → retorna "pouco usada" ─────────────
-  // dias_utilizados ≤ 3 garante score < 10% → pouco usada no app Android
   return res.json({
     id:               null,
     username:         username,
@@ -81,6 +64,16 @@ app.get('/api/v1/streamings/:username/consumo_mensal', (req, res) => {
     dias_utilizados:  3,
     total_minutos_mes: 60
   })
+})
+
+// ── GET /api/v1/streamings/pagamentos?nome=<nome> ──────────────────────────────
+app.get('/api/v1/streamings/pagamentos', (req, res) => {
+  const nomeservico = (req.query['nomeservico'] ?? '').toString().toLowerCase().trim()
+  const pagamentos = db.data.pagamentos ?? []
+
+  // Filter by service name (case-insensitive)
+  const results = pagamentos.filter(p => p.nomeservico.toLowerCase().includes(nomeservico))
+  res.json(results)
 })
 
 // ── GET /api/v1/streamings — lista todos ──────────────────────────────────────
@@ -96,5 +89,6 @@ app.listen(PORT, () => {
   console.log('\n  Mock API rodando!\n')
   console.log(`  GET http://localhost:${PORT}/api/v1/streamings`)
   console.log(`  GET http://localhost:${PORT}/api/v1/streamings/search?nome=%s`)
-  console.log(`  GET http://localhost:${PORT}/api/v1/streamings/:username/consumo_mensal?nome=%s&anomes=%s\n`)
+  console.log(`  GET http://localhost:${PORT}/api/v1/streamings/:username/consumo_mensal?nome=%s&anomes=%s`)
+  console.log(`  GET http://localhost:${PORT}/api/v1/streamings/pagamentos?nome=%s\n`)
 }, HOST)

@@ -1,6 +1,7 @@
 package br.com.payflowapplication.data.remote
 
 import br.com.payflowapplication.model.ConsumoMensal
+import br.com.payflowapplication.model.Pagamento
 import br.com.payflowapplication.model.Streaming
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -30,6 +31,13 @@ interface StreamingApiService {
         @Query("nome")          nome: String,
         @Query("anomes")        anomes: String,
     ): ConsumoMensal
+
+    /**
+     * GET /api/v1/streamings/pagamentos?nome={nome}
+     * Returns the payment history for a service.
+     */
+    @GET("api/v1/streamings/pagamentos")
+    suspend fun getPagamentos(
+        @Query("nomeservico") nomeservico: String
+    ): List<Pagamento>
 }
-
-
