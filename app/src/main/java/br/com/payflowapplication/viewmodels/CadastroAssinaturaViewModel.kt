@@ -28,7 +28,7 @@ data class CadastroAssinaturaUiState(
     val valor: String = "",
     val modalidade: Modalidade = Modalidade.MENSAL,
     val diaVencimento: String = "",
-    val categoria: CategoriaAssinatura? = null,
+    val categoria: CategoriaAssinatura? = CategoriaAssinatura.OUTROS,
     val urlServico: String = "",
     val dataInicio: LocalDate? = null,
     val nomeError: String? = null,
@@ -123,7 +123,8 @@ class CadastroAssinaturaViewModel @Inject constructor(
                 it.copy(
                     streamingSuggestions = results,
                     isLoadingSuggestions = false,
-                    showSuggestions = results.isNotEmpty()
+                    showSuggestions = results.isNotEmpty(),
+                    nomeError = if (results.isEmpty()) "Nome de serviço não encontrado" else it.nomeError
                 )
             }
         }
@@ -139,8 +140,7 @@ class CadastroAssinaturaViewModel @Inject constructor(
                 streamingSuggestions = emptyList(),
                 hasUnsavedChanges = true
             )
-        }
-        // Also cancel pending jobs since a suggestion was picked
+        }        // Also cancel pending jobs since a suggestion was picked
         checkNomeJob?.cancel()
         searchStreamingJob?.cancel()
     }

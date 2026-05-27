@@ -22,7 +22,6 @@ import br.com.payflowapplication.view.components.ErrorSupportText
 import br.com.payflowapplication.view.components.FieldLabel
 import br.com.payflowapplication.view.components.FilledTextField
 import br.com.payflowapplication.view.components.ModalidadeSegmentedButton
-import br.com.payflowapplication.view.components.StepIndicator
 import br.com.payflowapplication.view.components.StreamingAutocompleteField
 import br.com.payflowapplication.viewmodels.CadastroAssinaturaViewModel
 
@@ -201,19 +200,6 @@ fun CadastroAssinaturaScreen(
 
         ) {
 
-            Spacer(
-                Modifier.height(12.dp)
-            )
-
-            StepIndicator(
-                currentStep =
-                    if (uiState.isEditMode)
-                        3
-                    else
-                        2,
-
-                totalSteps = 3
-            )
 
             Spacer(
                 Modifier.height(16.dp)
@@ -460,7 +446,7 @@ fun CadastroAssinaturaScreen(
                     }
 
                     Text(
-                        "Salvar assinatura",
+                        "Salvar",
                         style =
                             MaterialTheme
                                 .typography
