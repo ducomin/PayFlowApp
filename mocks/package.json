@@ -1,0 +1,12 @@
+{
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "restart": "taskkill /F /IM node.exe 2>nul & node server.js"
+  },
+  "dependencies": {
+    "@tinyhttp/app": "^3.0.7",
+    "@tinyhttp/cors": "^2.0.1",
+    "lowdb": "^7.0.1"
+  }
+}

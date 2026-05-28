@@ -1,10 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="purple_200">#FFBB86FC</color>
-    <color name="purple_500">#FF6200EE</color>
-    <color name="purple_700">#FF3700B3</color>
-    <color name="teal_200">#FF03DAC5</color>
-    <color name="teal_700">#FF018786</color>
+    <!-- PayFlow brand palette (Material 3 Dark) -->
+    <color name="payflow_primary">#FF4DD0E1</color>
+    <color name="payflow_on_primary">#FF00363D</color>
+    <color name="payflow_primary_container">#FF00525C</color>
+    <color name="payflow_on_primary_container">#FF9EEEFF</color>
+
+    <color name="payflow_secondary">#FFFFD54F</color>
+    <color name="payflow_on_secondary">#FF3D2F00</color>
+    <color name="payflow_secondary_container">#FF574400</color>
+    <color name="payflow_on_secondary_container">#FFFFEDBC</color>
+
+    <color name="payflow_background">#FF191C1E</color>
+    <color name="payflow_on_background">#FFE1E2E5</color>
+    <color name="payflow_surface">#FF191C1E</color>
+    <color name="payflow_surface_container_high">#FF2F3436</color>
+    <color name="payflow_outline_variant">#FF40484C</color>
+    <color name="payflow_error">#FFFFB4AB</color>
+
+    <!-- Legacy aliases kept for resource references -->
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 </resources>

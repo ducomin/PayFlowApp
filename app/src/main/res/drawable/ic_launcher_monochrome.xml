@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    PayFlow monochrome adaptive icon (Android 13+).
+    Uses a single opaque path so the system can tint it with the wallpaper palette.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <path
+        android:fillColor="#FF000000"
+        android:pathData="M36,28H58C73.464,28 86,40.536 86,56C86,71.464 73.464,84 58,84H48V68H57C63.627,68 69,62.627 69,56C69,49.373 63.627,44 57,44H52V84H36V28Z" />
+
+    <path
+        android:fillColor="#FF000000"
+        android:pathData="M54,74.5C64.3,74.3 71.7,69.5 77.2,63.5C80.6,59.9 85.9,59.6 89.5,63C93.1,66.4 93.4,71.7 90,75.3C80.4,85.4 68.7,91.2 54.5,91.5L54,74.5Z" />
+
+</vector>
+
