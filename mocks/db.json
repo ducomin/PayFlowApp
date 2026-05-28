@@ -548,7 +548,7 @@
     {
       "nomeservico": "netflix",
       "plano": "Mensal",
-      "data_cobranca": "2026-05-12",
+      "data_cobranca": "2026-05-10",
       "valor": 39.90,
       "status": "Pago",
       "metodo_pagamento": "Cartão de Crédito (...4321)"
@@ -556,7 +556,7 @@
     {
       "nomeservico": "netflix",
       "plano": "Mensal",
-      "data_cobranca": "2026-04-12",
+      "data_cobranca": "2026-04-10",
       "valor": 39.90,
       "status": "Pago",
       "metodo_pagamento": "Cartão de Crédito (...4321)"
@@ -564,13 +564,13 @@
     {
       "nomeservico": "netflix",
       "plano": "Mensal",
-      "data_cobranca": "2026-03-12",
+      "data_cobranca": "2026-03-10",
       "valor": 39.90,
       "status": "Pago",
       "metodo_pagamento": "Cartão de Crédito (...4321)"
     },
     {
-      "nomeservico": "amazon Prime",
+      "nomeservico": "amazon prime video",
       "plano": "Anual",
       "data_cobranca": "2026-05-01",
       "valor": 19.90,
@@ -578,7 +578,7 @@
       "metodo_pagamento": "Cartão de Crédito (...4321)"
     },
     {
-      "nomeservico": "YouTube Premium",
+      "nomeservico": "YouTube Music",
       "plano": "mensal",
       "data_cobranca": "2026-05-15",
       "valor": 24.90,
@@ -586,9 +586,25 @@
       "metodo_pagamento": "PayPal (...5678)"
     },
     {
-      "nomeservico": "YouTube Premium",
+      "nomeservico": "YouTube Music",
       "plano": "mensal",
       "data_cobranca": "2026-04-15",
+      "valor": 24.90,
+      "status": "Pago",
+      "metodo_pagamento": "PayPal (...5678)"
+    },
+    {
+      "nomeservico": "spotify",
+      "plano": "mensal",
+      "data_cobranca": "2026-05-15",
+      "valor": 24.90,
+      "status": "Pago",
+      "metodo_pagamento": "PayPal (...5678)"
+    },
+    {
+      "nomeservico": "spotify",
+      "plano": "mensal",
+      "data_cobranca": "2026-05-15",
       "valor": 24.90,
       "status": "Pago",
       "metodo_pagamento": "PayPal (...5678)"

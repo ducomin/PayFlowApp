@@ -1,6 +1,7 @@
 package br.com.payflowapplication.di
 
 import android.content.Context
+import br.com.payflowapplication.data.preferences.AuthPreferencesDataStore
 import br.com.payflowapplication.data.preferences.ThemePreferencesDataStore
 import dagger.Module
 import dagger.Provides
@@ -9,12 +10,6 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
-/**
- * Módulo Hilt que expõe [ThemePreferencesDataStore] como singleton.
- *
- * O DataStore precisa do [Context] da Application para escapar do escopo
- * de Activity/ViewModel e sobreviver ao fechamento do app.
- */
 @Module
 @InstallIn(SingletonComponent::class)
 object PreferencesModule {
@@ -24,5 +19,10 @@ object PreferencesModule {
     fun provideThemePreferencesDataStore(
         @ApplicationContext context: Context,
     ): ThemePreferencesDataStore = ThemePreferencesDataStore(context)
-}
 
+    @Provides
+    @Singleton
+    fun provideAuthPreferencesDataStore(
+        @ApplicationContext context: Context,
+    ): AuthPreferencesDataStore = AuthPreferencesDataStore(context)
+}

@@ -2,6 +2,7 @@ package br.com.payflowapplication.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import br.com.payflowapplication.data.preferences.AuthPreferencesDataStore
 import br.com.payflowapplication.data.repository.AssinaturaRepository
 import br.com.payflowapplication.data.repository.NotificacaoRepository
 import br.com.payflowapplication.data.repository.StreamingRepository
@@ -11,6 +12,7 @@ import br.com.payflowapplication.model.ConsumoMensal
 import br.com.payflowapplication.model.Modalidade
 import br.com.payflowapplication.view.components.AssinaturaUso
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
@@ -20,6 +22,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -65,10 +68,8 @@ class HomeDashboardViewModel @Inject constructor(
     private val assinaturaRepository: AssinaturaRepository,
     private val streamingRepository: StreamingRepository,
     private val notificacaoRepository: NotificacaoRepository,
+    private val authPreferences: AuthPreferencesDataStore,
 ) : ViewModel() {
-
-    // Usuário logado — em produção viria de AuthRepository/PrefsRepository
-    private val username = "user1"
 
     private val _queryBusca     = MutableStateFlow("")
     private val _categoriaFiltro = MutableStateFlow<CategoriaAssinatura?>(null)
@@ -77,8 +78,11 @@ class HomeDashboardViewModel @Inject constructor(
     val uiState: StateFlow<HomeDashboardUiState> = _uiState.asStateFlow()
 
     /** Contagem reativa de notificações não lidas — exposta para o badge da NavBar */
-    val avisosNaoLidos: StateFlow<Int> = notificacaoRepository
-        .contarNaoLidas(username)
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val avisosNaoLidos: StateFlow<Int> = authPreferences.username
+        .flatMapLatest { user ->
+            notificacaoRepository.contarNaoLidas(user ?: "default")
+        }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), 0)
 
     /**
@@ -93,20 +97,28 @@ class HomeDashboardViewModel @Inject constructor(
                 assinaturaRepository.getAtivas(),
                 _queryBusca,
                 _categoriaFiltro,
-            ) { lista, query, categoria ->
-                Triple(lista, query, categoria)
+                authPreferences.username
+            ) { lista, query, categoria, user ->
+                DataParams(lista, query, categoria, user ?: "Usuário")
             }
                 .catch { e -> _uiState.value = HomeDashboardUiState.Error(e.message ?: "Erro") }
-                .collect { (lista, query, categoria) ->
+                .collect { params ->
                     // Emit loading skeleton on first load only
                     if (_uiState.value is HomeDashboardUiState.Loading) {
                         _uiState.value = HomeDashboardUiState.Loading
                     }
-                    val state = buildUiState(lista, query, categoria)
+                    val state = buildUiState(params)
                     _uiState.value = state
                 }
         }
     }
+
+    private data class DataParams(
+        val lista: List<Assinatura>,
+        val query: String,
+        val categoria: CategoriaAssinatura?,
+        val nomeUsuario: String
+    )
 
     fun onQueryBuscaChange(query: String)             = _queryBusca.update { query }
     fun onCategoriaFiltroChange(c: CategoriaAssinatura?) = _categoriaFiltro.update { c }
@@ -116,11 +128,9 @@ class HomeDashboardViewModel @Inject constructor(
 
     // ─── Build state ──────────────────────────────────────────────────────────
 
-    private suspend fun buildUiState(
-        lista: List<Assinatura>,
-        query: String,
-        categoria: CategoriaAssinatura?,
-    ): HomeDashboardUiState {
+    private suspend fun buildUiState(params: DataParams): HomeDashboardUiState {
+        val (lista, query, categoria, nomeUsuario) = params
+        
         if (lista.isEmpty()) return HomeDashboardUiState.Empty
 
         val cal      = Calendar.getInstance()
@@ -172,7 +182,7 @@ class HomeDashboardViewModel @Inject constructor(
             )
         }
 
-        // ── Filter ──────────────────��─────────────────────────────────────────
+        // ── Filter ───────────────────────────────────────────────────────────
         val filtrados = todosItens.filter { item ->
             val matchQuery    = query.isBlank() ||
                 item.assinatura.nomeServico.contains(query, ignoreCase = true)
@@ -182,7 +192,7 @@ class HomeDashboardViewModel @Inject constructor(
         }
 
         return HomeDashboardUiState.Success(
-            nomeUsuario              = "Usuário",
+            nomeUsuario              = nomeUsuario,
             mesReferencia            = mesLabel,
             totalMensal              = totalMensal,
             totalAtivas              = todosItens.size,

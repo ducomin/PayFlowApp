@@ -13,6 +13,7 @@ import br.com.payflowapplication.view.screens.DetalheScreen
 import br.com.payflowapplication.view.screens.SplashScreen
 import br.com.payflowapplication.view.screens.HistoryScreen
 import br.com.payflowapplication.view.screens.HomeDashboardScreen
+import br.com.payflowapplication.view.screens.LoginScreen
 import br.com.payflowapplication.view.screens.NotificacoesScreen
 import br.com.payflowapplication.view.screens.ProfileScreen
 
@@ -31,8 +32,23 @@ fun PayFlowNavGraph(darkTheme: Boolean,
         ) {
             SplashScreen(
                 onFinished = {
-                    navController.navigate(Routes.HOME) {
+                    navController.navigate(Routes.LOGIN) {
                         popUpTo(Routes.SPLASH) { inclusive = true }
+                    }
+                }
+            )
+        }
+
+        // ── Login ────────────────────────────────────────────────────────────
+        composable(
+            route = Routes.LOGIN,
+            enterTransition = { fadeIn(tween(300)) },
+            exitTransition = { fadeOut(tween(300)) }
+        ) {
+            LoginScreen(
+                onLoginSuccess = {
+                    navController.navigate(Routes.HOME) {
+                        popUpTo(Routes.LOGIN) { inclusive = true }
                     }
                 }
             )
@@ -41,8 +57,6 @@ fun PayFlowNavGraph(darkTheme: Boolean,
         // ── Home / Dashboard ─────────────────────────────────────────────────
         composable(
             route = Routes.HOME,
-            // Entering Home from Historico (right→left) → slide in from LEFT
-            // Entering Home from Notificacoes (left→right) → slide in from RIGHT
             enterTransition = {
                 when (initialState.destination.route) {
                     Routes.HISTORICO    -> slideInHorizontally(tween(350)) { -it }
@@ -68,7 +82,6 @@ fun PayFlowNavGraph(darkTheme: Boolean,
         }
 
         // ── History ────────────────────────────────────────────────────────────
-        // Historico is to the LEFT of Home → slides in from left, exits to left
         composable(
             route = Routes.HISTORICO,
             enterTransition = { slideInHorizontally(tween(350)) { -it } },
@@ -106,7 +119,11 @@ fun PayFlowNavGraph(darkTheme: Boolean,
         composable(Routes.PERFIL) {
             ProfileScreen(
                 onNavigateBack = { navController.popBackStack() },
-                onLogoutClick = { navController.popBackStack() },
+                onLogoutClick = {
+                    navController.navigate(Routes.LOGIN) {
+                        popUpTo(0) { inclusive = true }
+                    }
+                },
                 darkTheme = darkTheme,
                 onThemeChange = onThemeChange
             )
@@ -124,7 +141,6 @@ fun PayFlowNavGraph(darkTheme: Boolean,
         }
 
         // ── Notificações ─────────────────────────────────────────────────────
-        // Notificacoes is to the RIGHT of Home → slides in from right, exits to right
         composable(
             route = Routes.NOTIFICACOES,
             enterTransition = { slideInHorizontally(tween(350)) { it } },

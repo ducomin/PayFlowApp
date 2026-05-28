@@ -1,5 +1,6 @@
 package br.com.payflowapplication.di
 
+import br.com.payflowapplication.data.remote.AuthInterceptor
 import br.com.payflowapplication.data.remote.StreamingApiService
 import dagger.Module
 import dagger.Provides
@@ -25,11 +26,12 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideOkHttpClient(): OkHttpClient =
+    fun provideOkHttpClient(authInterceptor: AuthInterceptor): OkHttpClient =
         OkHttpClient.Builder()
             .connectTimeout(5, TimeUnit.SECONDS)
             .readTimeout(10, TimeUnit.SECONDS)
             .writeTimeout(10, TimeUnit.SECONDS)
+            .addInterceptor(authInterceptor)
             .addInterceptor(
                 HttpLoggingInterceptor().apply {
                     level = HttpLoggingInterceptor.Level.BODY
@@ -51,4 +53,3 @@ object NetworkModule {
     fun provideStreamingApiService(retrofit: Retrofit): StreamingApiService =
         retrofit.create(StreamingApiService::class.java)
 }
-

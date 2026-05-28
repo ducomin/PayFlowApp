@@ -57,12 +57,6 @@ fun HomeDashboardScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                navigationIcon = {
-                    IconButton(onClick = { /* drawer */ }) {
-                        Icon(Icons.Default.Menu, contentDescription = "Menu",
-                            tint = MaterialTheme.colorScheme.onSurfaceVariant)
-                    }
-                },
                 title = {
                     Text(
                         text = "PayFlow",
